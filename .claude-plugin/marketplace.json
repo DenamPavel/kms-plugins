@@ -1,0 +1,17 @@
+{
+    "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name": "kms-plugins",
+    "version": "1.0.0",
+    "description": "KMS Claude Code plugins",
+    "owner": {
+        "name": "KMS"
+    },
+    "plugins": [
+        {
+            "name": "kms-mcp-patterns",
+            "description": "Design patterns for building MCP servers",
+            "version": "1.0.0",
+            "source": "./plugins/kms-mcp-patterns"
+        }
+    ]
+}
