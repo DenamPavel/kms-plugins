@@ -1,0 +1,11 @@
+{
+    "name": "kms-human-voice",
+    "version": "1.0.0",
+    "description": "Personal writing style enforcement: anti-AI patterns, em-dash limits, contrastive framing bans, and direct communication",
+    "keywords": [
+        "writing",
+        "style",
+        "anti-ai",
+        "client-facing"
+    ]
+}

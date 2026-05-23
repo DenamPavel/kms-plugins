@@ -12,6 +12,12 @@
             "description": "Design patterns for building MCP servers",
             "version": "1.0.0",
             "source": "./plugins/kms-mcp-patterns"
+        },
+        {
+            "name": "kms-human-voice",
+            "description": "Personal writing style enforcement: anti-AI patterns, em-dash limits, contrastive framing bans, and direct communication",
+            "version": "1.0.0",
+            "source": "./plugins/kms-human-voice"
         }
     ]
 }
