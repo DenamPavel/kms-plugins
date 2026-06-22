@@ -2,7 +2,7 @@
 
 **Better MCP servers through better design patterns.**
 
-This is a personal Claude Code plugin marketplace. Current focus: patterns for building MCP servers that produce reliable, readable, debuggable LLM-generated code.
+This is a personal Claude Code plugin marketplace spanning MCP design patterns, writing-style enforcement, and analytical essay generation.
 
 ## Installation
 
@@ -24,10 +24,26 @@ Restart Claude Code to activate.
 
 ### kms-mcp-patterns
 
-Design patterns for building MCP servers. Starts with the Code Mode pattern — more patterns to come.
+Design patterns for building MCP servers. Starts with the Code Mode pattern, with more to come.
 
 ```
 claude plugin install kms-mcp-patterns@kms-plugins
+```
+
+### kms-human-voice
+
+Personal writing-style enforcement: em-dash limits, contrastive-framing bans, internal-code redaction, and an intensity-review pass. Ships PostToolUse hooks that flag AI phrasing on save.
+
+```
+claude plugin install kms-human-voice@kms-plugins
+```
+
+### insight-essay-bot
+
+Analytical essay skills in the style of kontextmaschine: excavate the gap between what a subject appears to be and the material, institutional, and economic conditions that produced it. Three skills (explore, write, edit). Lives in its own repo at [DenamPavel/InsightEssayBot](https://github.com/DenamPavel/InsightEssayBot) and is cataloged here for one-step install.
+
+```
+claude plugin install insight-essay-bot@kms-plugins
 ```
 
 ## Why Code Mode?
