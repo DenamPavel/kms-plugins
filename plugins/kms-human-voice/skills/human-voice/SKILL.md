@@ -1,12 +1,12 @@
 ---
 name: human-voice
-description: Use when writing any prose, documentation, client-facing text, or commit messages - enforces personal anti-AI phrasing rules, em-dash limits, contrastive framing bans, terminology preferences, intensity modulation, structural prose tells, and direct communication style
+description: Use when writing any prose, documentation, client-facing text, or commit messages - a self-contained set of anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, terminology preferences, intensity modulation, structural prose tells, and direct communication style
 user-invocable: false
 ---
 
 # Human Voice
 
-Complements `writing-for-a-technical-audience` (ed3d-house-style), which covers broad AI-pattern avoidance: phrase blacklists, hedging, throat-clearing, transition words. This skill covers specific enforcement rules from client feedback, plus intensity modulation and structural prose tells.
+A self-contained writing-voice skill: personal anti-AI prose rules from client feedback, plus intensity modulation and structural prose tells. It pairs with `writing-for-a-technical-audience` (ed3d-house-style) and does not depend on it. The prose rules that overlap with that skill are duplicated here on purpose, so this skill stays portable on its own. It does not duplicate ed3d's technical-documentation craft (code-example design, progressive disclosure, API-reference structure); reach for that skill when you need those.
 
 ## Rules
 
@@ -187,19 +187,83 @@ These are sentence-level constructions that read as machine-written. They are di
 
 When you act on any flag from this skill, rewrite the sentence or paragraph from its intended meaning rather than patch-editing in place. Start from what the sentence should say and write it fresh. Editing around a problem tends to extend the sentence and produce clause barf, which is how the structure got bad in the first place.
 
-## When this fires vs. when writing-for-a-technical-audience fires
+## Shared prose rules (duplicated for portability)
+
+Rules 9 through 14 overlap with `writing-for-a-technical-audience`. They live here so this skill works without that one installed.
+
+### 9. AI phrase blacklist
+
+These words and phrases read as machine-generated. Replace them.
+
+| Phrase | Use instead |
+|--------|-------------|
+| "delve into" | "explore," "examine," "look at" |
+| "leverage" | "use," "take advantage of" |
+| "robust" / "seamless" | be specific about what you mean |
+| "at its core" | "fundamentally" (rarely) or delete |
+| "cutting-edge" / "revolutionary" | describe the actual feature |
+| "streamline" / "optimize" | "speed up," "reduce," "improve" |
+| "foster" / "cultivate" | a direct action verb |
+| "unlock the potential" | state the specific outcome |
+| "in today's fast-paced world" | delete |
+| "needless to say" | delete |
+
+### 10. No throat-clearing
+
+Start with substance. Delete the preamble. Never open with "Let me explain...", "It's important to note that...", "It's worth noting...", "In essence...", or "Let's explore..."
+
+### 11. No hedging
+
+Hedging makes you sound uncertain even when you are correct. State facts directly.
+
+| Hedged | Direct |
+|--------|--------|
+| "I think we should..." | "We should..." |
+| "It would be great if..." | "Please do X" |
+| "Should be able to..." | "Can complete..." |
+| "Basically..." | delete |
+| "Generally speaking..." | be specific or remove |
+| "One might argue..." | "This indicates..." |
+
+### 12. No transition-word overuse
+
+LLMs default to formal Victorian connectors. Use plain ones or break the paragraph.
+
+| Overused | Better |
+|----------|--------|
+| Moreover / Furthermore | Plus, also, and |
+| However / Nevertheless | But, though, still |
+| Additionally | And, plus |
+| Consequently / As a result | So, then |
+| That being said | But (or delete) |
+| Indeed / Interestingly | usually delete |
+| In conclusion | end cleanly, do not announce it |
+
+### 13. Give the reason, not just the mechanism
+
+When a claim is non-obvious or surprising, state why before the how, and do not strip the justifying clause when tightening a passage. Explain why for design decisions with tradeoffs, non-obvious patterns, and breaks from convention. For mechanical steps with no alternatives ("Click Save"), the how is enough.
+
+| Before | After |
+|--------|-------|
+| Enable RLS on all tables. | Enable RLS on all tables; it enforces access at the database level, so direct SQL cannot bypass it. |
+
+### 14. Be specific
+
+Vague quantifiers and abstract substitutes read as filler. Name the concrete figure or property. This includes spatial metaphors ("wide," "narrow," "broad," "reach") standing in for things that have specific names.
+
+| Vague | Specific |
+|-------|----------|
+| This approach offers significant benefits. | Latency dropped from 450ms to 120ms. |
+| The wider choices persist. | The persistent choices remain across restarts. |
+
+## Relationship to writing-for-a-technical-audience
+
+This skill is standalone; everything above is enforced here with no dependency on the ed3d skill. When `writing-for-a-technical-audience` is also installed, it adds technical-documentation craft this skill does not cover.
 
 | Concern | Covered by |
 |---------|-----------|
-| "Delve," "leverage," "robust" | writing-for-a-technical-audience |
-| Throat-clearing, hedging | writing-for-a-technical-audience |
-| Transition word overuse | writing-for-a-technical-audience |
-| Progressive disclosure, code examples | writing-for-a-technical-audience |
-| Em-dash counting | human-voice (this skill + hook) |
-| Contrastive framing ban | human-voice (this skill + hook) |
-| Internal codes in client text | human-voice (this skill) |
-| "Metis" terminology | human-voice (this skill) |
-| Direct communication style | human-voice (this skill) |
-| Intensity saturation review | human-voice (this skill + hook + agent) |
-| Structural prose tells (clause barf, hedge tails, false equations, etc.) | human-voice (this skill) |
-| Rewrite-don't-patch when fixing | human-voice (this skill) |
+| Em-dash limit, contrastive framing, internal codes, metis, direct communication | human-voice |
+| Intensity saturation review | human-voice (+ hook + agent) |
+| Structural prose tells, rewrite-don't-patch | human-voice |
+| AI phrase blacklist, throat-clearing, hedging, transition words, reason-not-mechanism, be-specific | human-voice (duplicated for portability) |
+| Code-example design, progressive disclosure, API-reference structure | writing-for-a-technical-audience only |
