@@ -1,0 +1,15 @@
+{
+    "name": "kms-docs",
+    "version": "1.0.0",
+    "description": "Writing product and tool documentation: the two-reader model (human + retrieval), self-contained sections, behavior-not-implementation scope, actor/terminology discipline, the machine-writing tells checklist, a multi-reviewer cross-model review gate, flagging doc changes for human review, and keeping docs synced to code",
+    "author": {
+        "name": "KMS"
+    },
+    "keywords": [
+        "documentation",
+        "writing",
+        "user-manual",
+        "reference",
+        "technical-writing"
+    ]
+}

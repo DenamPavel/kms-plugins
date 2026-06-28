@@ -38,6 +38,14 @@ Personal writing-style enforcement: em-dash limits, contrastive-framing bans, in
 claude plugin install kms-human-voice@kms-plugins
 ```
 
+### kms-docs
+
+Writing product and tool documentation. One skill, `writing-documentation`: the two-reader model (human plus retrieval), self-contained sections, behavior-not-implementation scope, actor and terminology discipline, a machine-writing tells checklist, a multi-reviewer cross-model review gate, flagging doc changes for human review, and keeping docs synced to code. Self-contained; pairs with `kms-human-voice`.
+
+```
+claude plugin install kms-docs@kms-plugins
+```
+
 ### insight-essay-bot
 
 Analytical essay skills in the style of kontextmaschine: excavate the gap between what a subject appears to be and the material, institutional, and economic conditions that produced it. Three skills (explore, write, edit). Lives in its own repo at [DenamPavel/InsightEssayBot](https://github.com/DenamPavel/InsightEssayBot) and is cataloged here for one-step install.
