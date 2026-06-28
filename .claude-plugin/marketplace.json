@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "kms-plugins",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "KMS Claude Code plugins",
     "owner": {
         "name": "KMS"
@@ -15,8 +15,8 @@
         },
         {
             "name": "kms-human-voice",
-            "description": "Personal writing style enforcement: anti-AI patterns, em-dash limits, contrastive framing bans, and direct communication",
-            "version": "1.0.0",
+            "description": "Personal writing style enforcement: anti-AI patterns, em-dash limits, contrastive framing bans, intensity modulation, and direct communication",
+            "version": "1.1.0",
             "source": "./plugins/kms-human-voice"
         },
         {

@@ -8,6 +8,11 @@
                         "type": "command",
                         "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check-ai-patterns.sh",
                         "timeout": 10
+                    },
+                    {
+                        "type": "command",
+                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check-intensity.sh",
+                        "timeout": 10
                     }
                 ]
             }

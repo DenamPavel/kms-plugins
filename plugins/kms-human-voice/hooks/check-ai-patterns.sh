@@ -10,9 +10,22 @@ case "$FILE" in
   *) exit 0 ;;
 esac
 
+# Skip internal / agent-facing files. The em-dash and contrastive checks only
+# apply to people-facing deliverables, not pickup/status/handoff docs.
+case "$FILE" in
+  */.claude/*) exit 0 ;;
+  */docs/design-plans/*) exit 0 ;;
+esac
+BASENAME_LOWER=$(basename "$FILE" | tr '[:upper:]' '[:lower:]')
+case "$BASENAME_LOWER" in
+  claude.md|agents.md|memory.md|skill.md|readme.md) exit 0 ;;
+  # Internal / agent-facing docs: pickup, status, handoff, progress
+  *pickup*|*status*|*handoff*|*progress*) exit 0 ;;
+esac
+
 WARNINGS=""
 
-EMDASH_COUNT=$(grep -o ' — ' "$FILE" 2>/dev/null | wc -l | tr -d ' ')
+EMDASH_COUNT=$(grep -oE ' — | -- |—' "$FILE" 2>/dev/null | wc -l | tr -d ' ')
 EMDASH_COUNT=${EMDASH_COUNT:-0}
 if [[ "$EMDASH_COUNT" -gt 1 ]]; then
   WARNINGS="${WARNINGS}Found ${EMDASH_COUNT} em-dashes. Replace with commas, semicolons, or periods. "
