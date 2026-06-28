@@ -1,12 +1,12 @@
 ---
 name: human-voice
-description: Use when writing any prose, documentation, client-facing text, or commit messages - enforces personal anti-AI phrasing rules, em-dash limits, contrastive framing bans, terminology preferences, intensity modulation, and direct communication style
+description: Use when writing any prose, documentation, client-facing text, or commit messages - enforces personal anti-AI phrasing rules, em-dash limits, contrastive framing bans, terminology preferences, intensity modulation, structural prose tells, and direct communication style
 user-invocable: false
 ---
 
 # Human Voice
 
-Complements `writing-for-a-technical-audience` (ed3d-house-style), which covers broad AI-pattern avoidance: phrase blacklists, hedging, throat-clearing, transition words. This skill covers specific enforcement rules from client feedback, plus intensity modulation for prose.
+Complements `writing-for-a-technical-audience` (ed3d-house-style), which covers broad AI-pattern avoidance: phrase blacklists, hedging, throat-clearing, transition words. This skill covers specific enforcement rules from client feedback, plus intensity modulation and structural prose tells.
 
 ## Rules
 
@@ -62,7 +62,7 @@ None of the patterns below are forbidden. They're legitimate craft when used del
 
 **Compulsive personification.** Giving agency to objects or abstractions as a reflex. Cursors that convulse, code that smirks, leaves that cling defiantly. Reserve personification for moments where the attribution of intent matters to the point you're making.
 
-**Structural repetition.** Consecutive sentences following the same syntactic template, independent of which device is used. Three sentences in a row opening with a personified abstraction, or three in a row pairing a concrete image with an emotion. The structure itself becomes the tell even when each sentence is individually defensible.
+**Structural repetition.** Consecutive sentences following the same syntactic template, independent of which device is used. Three sentences in a row opening with a personified abstraction, or three in a row pairing a concrete image with an emotion. The structure itself becomes the tell even when each sentence is individually defensible. This applies to plain prose, not only literary passages: three sentences starting with the same word (including "the"), or a run of clauses built on the same anaphoric rhythm ("you write there, you reference there, you reach back there"), is the same failure. Three or more in a row is always wrong; two with leading dependent clauses is sometimes worth breaking up.
 
 **Register flatness.** Every sentence operating at the same intensity, whether literary-heightened or clinical-detached. Plain sentences create the space that makes a striking image stand out. If every line is reaching for effect, none of them land.
 
@@ -135,6 +135,58 @@ These are non-blocking warnings, not demands. Be specific and brief.
 
 The agent's output is advisory. Address findings during finalization, not mid-draft.
 
+### 7. Structural prose tells
+
+These are sentence-level constructions that read as machine-written. They are distinct from the literary patterns in Rule 6: this is plain expository prose that has gone wrong structurally. Adapted from Ed Ropple's Polytoken documentation style guide.
+
+**Clause barf.** Comma-clause strings that force the reader to assemble the meaning. Commit to one declarative shape and name the concrete detail inline.
+
+| Before | After |
+|--------|-------|
+| Approve a recurring action once, at the scope you choose, and stop being asked. | Approve a recurring action once and Claude stops asking. You set the scope when you approve. |
+
+**Hedge-alternative tails.** An obvious secondary path bolted onto a sentence with "...or". Cut the tail; state the primary path.
+
+| Before | After |
+|--------|-------|
+| Type `/` as the first character of an empty prompt, or type a command in full. | Type `/` to open the command menu. |
+
+**Over-packed list-sentences.** Many examples crammed in before the verb, delaying it. Split into separate sentences or a list.
+
+| Before | After |
+|--------|-------|
+| Sessions, tool runs, context windows, permission grants, and skill activations all persist across restarts. | These persist across restarts: sessions, tool runs, context windows, permission grants, and skill activations. |
+
+**Reassurance / summary sentences.** A sentence that restates the list or fact the reader just read. Delete it.
+
+| Before | After |
+|--------|-------|
+| The queue holds follow-up prompts. This means you can line up work without losing your place. | The queue holds follow-up prompts. |
+
+**Pronoun antecedent clarity.** Every "it," "this," "that," or "they" needs an unambiguous referent a reader can identify cold. Use the noun when the referent is even slightly unclear.
+
+| Before | After |
+|--------|-------|
+| Understanding it is the first step. | Understanding the permission system is the first step. |
+
+**False equations.** Equating things of different kinds with "is." Replace with an accurate verb.
+
+| Before | After |
+|--------|-------|
+| That decision is the permission system. | The permission system produces that decision. |
+
+**Salesmanship.** State capabilities plainly. Cut competitive comparison, especially in client-facing text.
+
+| Before | After |
+|--------|-------|
+| Daily refresh, which the other vendors do not offer. | Data refreshes daily. |
+
+**Structure-preview sentences.** "This page covers..." or "The findings fall into three groups..." when a heading already says so. Delete the preview; let the heading carry it.
+
+### 8. Fixing flagged prose: rewrite, do not patch
+
+When you act on any flag from this skill, rewrite the sentence or paragraph from its intended meaning rather than patch-editing in place. Start from what the sentence should say and write it fresh. Editing around a problem tends to extend the sentence and produce clause barf, which is how the structure got bad in the first place.
+
 ## When this fires vs. when writing-for-a-technical-audience fires
 
 | Concern | Covered by |
@@ -149,3 +201,5 @@ The agent's output is advisory. Address findings during finalization, not mid-dr
 | "Metis" terminology | human-voice (this skill) |
 | Direct communication style | human-voice (this skill) |
 | Intensity saturation review | human-voice (this skill + hook + agent) |
+| Structural prose tells (clause barf, hedge tails, false equations, etc.) | human-voice (this skill) |
+| Rewrite-don't-patch when fixing | human-voice (this skill) |
