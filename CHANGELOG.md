@@ -1,5 +1,12 @@
 # Changelog
 
+## kms-plugins 1.6.0
+
+kms-docs grows from a single skill into a documentation pipeline.
+
+**Changed:**
+- `kms-docs` 2.0.0: adds a `/write-doc` command and an orchestrator skill (`documentation-pipeline`) that runs six agents around the rulebook: `doc-investigator` (ground truth plus a do-not-leak list), `doc-writer`, `doc-fact-checker`, `doc-editor` (opus, cross-model), `doc-coverage-critic`, and `doc-reviser`. Two human gates: scope after grounding, and the finished page before it replaces a live doc. The `writing-documentation` skill was revised from a technical-editor pass: affirmative-phrasing rule replaces the old positive-framing rule, testable scope and structure rules, a code-samples section, UI-element conventions, and a tightened trigger description.
+
 ## kms-plugins 1.5.0
 
 New plugin.

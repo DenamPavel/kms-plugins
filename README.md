@@ -40,7 +40,7 @@ claude plugin install kms-human-voice@kms-plugins
 
 ### kms-docs
 
-Writing product and tool documentation. One skill, `writing-documentation`: the two-reader model (human plus retrieval), self-contained sections, behavior-not-implementation scope, actor and terminology discipline, a machine-writing tells checklist, a multi-reviewer cross-model review gate, flagging doc changes for human review, and keeping docs synced to code. Self-contained; pairs with `kms-human-voice`.
+A documentation pipeline. The `writing-documentation` skill is the rulebook: the two-reader model (human plus retrieval), self-contained sections, behavior-not-implementation scope, actor and terminology discipline, code samples, a machine-writing tells checklist, and keeping docs synced to code. The `/write-doc` command orchestrates six agents around it: `doc-investigator` grounds against source and builds a do-not-leak list, `doc-writer` drafts, `doc-fact-checker`, `doc-editor` (a different model than the writer), and `doc-coverage-critic` review in parallel, and `doc-reviser` rewrites from intent. Two human gates: scope after grounding, and the finished page before it replaces a live doc. Self-contained; pairs with `kms-human-voice`.
 
 ```
 claude plugin install kms-docs@kms-plugins
