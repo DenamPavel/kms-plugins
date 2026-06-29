@@ -46,9 +46,10 @@ Record the controlled vocabulary and the structure (sidebar groups, page order) 
 
 ## Referring to UI elements
 
-When the docs name something the user clicks, types, or reads on screen, write it the same way every time.
+When the docs name something the user acts on, types, or reads on screen, write it the same way every time.
 
-- **Bold the literal label** of a control the user acts on: click **Export**, open the **Period** dropdown.
+- **Use "select," not "click."** "Select" is input-agnostic: it covers mouse, trackpad, touch, and keyboard. "Click" assumes a mouse and reads wrong on touch and accessible devices. Write "select **Export**," not "click **Export**." Reserve verbs like "tap" or "press" for docs scoped to one specific device.
+- **Bold the literal label** of a control the user acts on: select **Export**, open the **Period** dropdown.
 - **Write menu paths with a separator**, not prose: **File > Export > CSV**, not "open the File menu, then Export, then CSV."
 - **Match the on-screen capitalization and wording** of a label exactly. If the button says "Save changes," do not write "Save Changes."
 - **Name the control type** when it is not obvious: the **Store set** toggle, the **Search** field, the **Top movers** list.
@@ -66,7 +67,7 @@ These are hard rules. A first draft will not satisfy them on its own; the review
 ## Page structure
 
 - **Headings name their subject in a consistent grammatical form.** Pick one shape per page and hold it: noun phrases ("Configuration", "Permissions") or gerund task phrases ("Configuring access", "Managing work"), not a mix. Use sentence case unless the project sets title case.
-- **A task is a numbered procedure.** One action per step, in imperative mood, in the order the user performs them. State the result when it is not obvious ("Click **Start**. The daemon begins watching the folder."). State any precondition before step 1.
+- **A task is a numbered procedure.** One action per step, in imperative mood, in the order the user performs them. State the result when it is not obvious ("Select **Start**. The daemon begins watching the folder."). State any precondition before step 1.
 - **Use a list for a set the reader scans, a table for a set with shared attributes.** Options with a name and a meaning are a table (a column each for name and meaning). A sequence of choices or items is a list. Keep list items grammatically parallel.
 - **Prose carries the reasoning; lists and tables carry the enumerations.** Do not bury a "why" inside a table cell.
 
