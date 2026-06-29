@@ -67,7 +67,7 @@ These are hard rules. A first draft will not satisfy them on its own; the review
 ## Page structure
 
 - **Headings name their subject in a consistent grammatical form.** Pick one shape per page and hold it: noun phrases ("Configuration", "Permissions") or gerund task phrases ("Configuring access", "Managing work"), not a mix. Use sentence case unless the project sets title case.
-- **A task is a numbered procedure.** One action per step, in imperative mood, in the order the user performs them. State the result when it is not obvious ("Select **Start**. The daemon begins watching the folder."). State any precondition before step 1.
+- **A task is a numbered procedure, and every task on a page uses that one shape.** One action per step, in imperative mood, in the order the user performs them. State the result when it is not obvious ("Select **Start**. The daemon begins watching the folder."). State any precondition before step 1. Do not write one task as numbered steps, the next as a prose paragraph, and a third as a bare bullet list; pick the numbered procedure and hold it for every sequence the reader performs in order. Reserve bullets for sets the reader does not perform in sequence (independent options, field enumerations); a field list can sit as sub-bullets under the numbered step that opens the form.
 - **Use a list for a set the reader scans, a table for a set with shared attributes.** Options with a name and a meaning are a table (a column each for name and meaning). A sequence of choices or items is a list. Keep list items grammatically parallel.
 - **Prose carries the reasoning; lists and tables carry the enumerations.** Do not bury a "why" inside a table cell.
 
@@ -103,6 +103,7 @@ Machine-written prose has recognizable tells. Hunt these in every draft and in r
 | **Comma splice** | Two independent clauses joined by a comma | Period or semicolon. |
 | **Repetitive sentence starts** | Multiple sentences in a row opening with the same word (including "The" or the product name) | Vary the openings. |
 | **Repetitive sentence structure** | Three same-shape sentences in a row (for example three leading-dependent-clause openers) | Vary the shape. Flag two in a row for a second look. |
+| **Mixed instruction formats** | The same kind of step rendered as a numbered list in one section, a prose paragraph in another, a bare bullet list in a third | Convert every sequential task to the same numbered-procedure shape; keep bullets only for non-sequential enumerations. |
 | **Unverified positional/ordered claim** | "the controls, in this order: ..." or "the first/last X" written from memory | Open the rendering source and confirm the order, or drop the ordering promise. |
 | **Bare or vague link text** | "click here", a raw URL | Use the destination's name as the link text. |
 
