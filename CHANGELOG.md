@@ -1,5 +1,10 @@
 # Changelog
 
+## kms-plugins 1.6.1
+
+**Changed:**
+- `kms-docs` 2.0.1: make the pipeline self-contained for any user. The orchestrator now states that its six agents ship with the plugin and are dispatched by name via the Task tool, with no general-purpose substitute and no other plugin required. Removed the external ed3d reference from the rulebook.
+
 ## kms-plugins 1.6.0
 
 kms-docs grows from a single skill into a documentation pipeline.

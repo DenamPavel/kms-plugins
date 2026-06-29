@@ -23,6 +23,8 @@ If either is missing, ask before starting.
 
 ## The agents
 
+These six agents ship with this plugin. Dispatch each with the Task tool, using the agent's name (the left column below) as the subagent type. The pipeline needs no other plugin and no general-purpose agent; use the bundled agents, not a generic substitute, so the roles and model assignments hold.
+
 | Agent | Model | Role |
 |-------|-------|------|
 | `doc-investigator` | sonnet | Ground truth: user-facing surface, DO-NOT-LEAK list, page-to-source map, existing-docs inventory |
