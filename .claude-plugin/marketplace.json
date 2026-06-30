@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "kms-plugins",
-    "version": "1.6.1",
+    "version": "1.7.0",
     "description": "KMS Claude Code plugins",
     "owner": {
         "name": "KMS"
@@ -15,8 +15,8 @@
         },
         {
             "name": "kms-docs",
-            "description": "A documentation pipeline: the writing-documentation rulebook plus a /write-doc command that orchestrates source grounding, drafting, cross-model fact-check/edit/coverage review, and revision with two human gates",
-            "version": "2.0.1",
+            "description": "A documentation pipeline: the writing-documentation rulebook plus a /write-doc command that orchestrates source grounding, drafting, bundled Playwright screenshot capture with a code-enforced data-leak guard, cross-model fact-check/edit/coverage review, and revision with two human gates",
+            "version": "2.1.0",
             "source": "./plugins/kms-docs"
         },
         {

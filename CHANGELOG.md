@@ -1,5 +1,12 @@
 # Changelog
 
+## kms-plugins 1.7.0
+
+kms-docs gains screenshot capture.
+
+**New:**
+- `kms-docs` 2.1.0: the documentation pipeline can now capture screenshots from a running product. A seventh agent, `doc-screenshooter`, builds a declarative capture spec and drives a bundled Playwright script (`scripts/capture.mjs`); no other plugin is required. Data-leak prevention is layered and code-enforced: every shot must assert a safe-mode indicator before any pixels are written, so a forgotten safe-mode toggle produces a refused shot rather than a leaked image. The orchestrator adds a Capture stage (1.5) and negotiates a per-surface safe-capture plan with the human at GATE 1. The `writing-documentation` rulebook now treats a screenshot as an aid the text must not depend on, and adds an "image-only information" tell to the review gate. `doc-investigator` returns a capture plan; `doc-writer` embeds approved shots with alt text.
+
 ## kms-plugins 1.6.1
 
 **Changed:**
