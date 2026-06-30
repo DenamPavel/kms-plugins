@@ -80,6 +80,25 @@ These are hard rules. A first draft will not satisfy them on its own; the review
 - **Show output only when the reader needs it to confirm success,** and label it as output, separate from the command.
 - **Do not include the shell prompt character** (`$`, `>`) in a command the reader will copy.
 
+## Screenshots and images
+
+A screenshot is a visual aid for the reader who learns by seeing. Screenshots are welcome, including of forms and ordinary screens. They are subject to one governing rule and a few hard constraints.
+
+**A screenshot supplements the text; it never carries information alone.** The prose, the numbered steps, and the field or column tables must be complete on their own, so a reader who never sees the image loses nothing. That protects the two readers a picture cannot serve: the retrieval reader (search, a RAG index, an LLM reading one passage) and the reader using a screen reader. When the text is already complete, a screenshot that repeats it is not waste; it serves visual learners, and that redundancy is the point. Never let a fact, a label, a default, the options in a control, or a step live only in an image, or only in its alt text. Naming a control in the steps does not carry its options if those appear only in the picture.
+
+A form, then, still gets its numbered procedure and its field table, and you may add a screenshot of it on top. The text is the source of truth; the image is the aid.
+
+Hard constraints on any screenshot you include:
+
+- **Capture from the running product, never a mockup.** A screenshot is a factual claim about what the product looks like. Take it from the actual build; never hand-edit pixels to show a state the product cannot produce.
+- **No real data in the frame.** The DO-NOT-LEAK list extends to pixels. Real names, customer or constituent records, email addresses, tokens, internal hostnames and URLs, and account identifiers must not appear. Capture against a seeded or demo dataset, or redact the region with a solid block before the image ships. Do not blur sensitive data; a blur can be reversed.
+- **Crop to the subject.** Show the panel or control the section is about, not the whole desktop. Trim browser chrome and unrelated UI.
+- **Write alt text that states what the image shows**, for the retrieval reader and the reader who cannot see it. Describe the meaningful content ("the campaign tracker sorted by **Status** descending"), not the medium ("screenshot of the app"). Describe only what the capture actually contains; do not invent colors, labels, counts, or states you have not confirmed are in the image. Alt text is required on every image.
+- **Add a caption only when a sighted reader needs context the alt text does not give** (which build, which state). Most images need none.
+- **Name and store images by the surface they show**, in the docs project's image directory. Keep the path and naming convention in the docs repo, not in this skill.
+
+A screenshot ages: a UI change that leaves the words correct can still date the picture. Cosmetic drift (a restyled button, a new color) is an accepted cost, because the text carries the facts. An image that contradicts the current text is a different matter: a dropdown missing an option the steps list, or a renamed control the steps reference, is wrong rather than merely dated, and you recapture or remove it. Treat each screenshot as part of the page-to-source map so the owning screen's changes flag it for a recapture.
+
 ## The tells checklist
 
 Machine-written prose has recognizable tells. Hunt these in every draft and in review. Some rows restate the Voice and Verify rules above as scan targets; that overlap is deliberate.
@@ -108,6 +127,9 @@ Machine-written prose has recognizable tells. Hunt these in every draft and in r
 | **Table described as a comma list** | A grid's columns written inline ("columns: **A**, **B**, **C**") or as a bare bullet list | Render the columns as a **Column** / **Description** table, in on-screen order. |
 | **Unverified positional/ordered claim** | "the controls, in this order: ..." or "the first/last X" written from memory | Open the rendering source and confirm the order, or drop the ordering promise. |
 | **Bare or vague link text** | "click here", a raw URL | Use the destination's name as the link text. |
+| **Image-only information** | A fact a reader needs (a label, a default, a field, the options in a dropdown, a step) that appears only in a screenshot or its alt text, not in the page's prose, steps, or tables. Naming a control is not enough if its options live only in the picture: "select the **Role** dropdown" while Viewer/Editor/Admin appear only in the image. | Carry the fact in the body text (prose, steps, or a table). The image and its alt text may repeat it; they do not replace it. |
+| **Real data in a screenshot** | A captured screen showing real names, records, email addresses, or internal URLs | Recapture against a seeded or demo dataset, or redact the region with a solid block (not a blur). |
+| **Missing or medium-naming alt text** | No alt text, or alt text like "screenshot of the dashboard" | Describe the meaningful content the image shows, not the medium. |
 
 ## Verify claims against source
 
@@ -115,6 +137,7 @@ Documentation states facts about the product, and a confident wrong fact is wors
 
 - **Ordered and positional claims.** The order controls appear in a sidebar, the sequence of steps in a flow, which item is first or last. If you write "in this order" or "the first/last X," open the source that renders it and confirm. When the order is volatile or you cannot confirm it, present the set without sequencing rather than assert a sequence you have not checked.
 - **Counts, defaults, and labels.** Exact button labels, which option is the default, how many items a list shows. Quote these from the source, not from memory.
+- **Screenshots.** A screenshot is a claim about what the product looks like now. Capture it from the running build, confirm it does not contradict the surrounding text, and recapture or remove it when it does. Never mock or hand-edit one. The text must carry every fact on its own; the image only supplements it.
 
 The review gate re-checks every positional, ordered, default, and label claim against source, not only the prose.
 
@@ -165,6 +188,7 @@ This skill is the generic rulebook. Each docs project pins down its own specific
 - The **controlled vocabulary** of actor nouns and the one chosen spelling per term.
 - The **structure**: sidebar groups and their order, what belongs in "using" vs "reference," sentence case or title case for headings.
 - The **page-to-source map**, kept current as pages are added.
+- The **image directory and naming convention** for screenshots, and the project's **safe-capture plan**: how each documentable surface is rendered with no real data (a built-in demo mode, a seeded dataset, a demo instance, an empty account, or redaction), how a capture agent confirms the safe state, and any surface that has no safe option (so the capture plan avoids it).
 - Any **release-notes/changelog conventions**: where entries live, what level of detail a bug-fix bullet versus a feature bullet gets, how breaking changes are labeled.
 - Optional **migration tips** for users coming from a predecessor tool, used only where a real difference exists.
 
@@ -175,9 +199,10 @@ This skill is the generic rulebook. Each docs project pins down its own specific
 3. One precise noun per actor; "you" is the reader; full dotted paths for nested keys; bold literal UI labels.
 4. Active voice, clear antecedents, no em-dashes, one spelling per term.
 5. Code blocks: language-tagged, runnable or marked partial, placeholders not credentials.
-6. Hunt the tells checklist in every draft.
-7. Review gate: 2+ reviewers, at least one a different model; findings are input, not verdict; rewrite from intent.
-8. Flag every doc change to the human in the same turn, and keep docs synced to code both directions.
+6. Screenshots are a welcome visual aid but never the sole source: the text must be complete without them. Capture from the live product, no real data in frame, crop, required alt text.
+7. Hunt the tells checklist in every draft.
+8. Review gate: 2+ reviewers, at least one a different model; findings are input, not verdict; rewrite from intent.
+9. Flag every doc change to the human in the same turn, and keep docs synced to code both directions.
 
 ## Common mistakes
 
@@ -190,3 +215,5 @@ This skill is the generic rulebook. Each docs project pins down its own specific
 | Treating a reviewer finding as a verdict | Reject wrong findings; the rules allow it. |
 | Changing docs silently inside other work | Flag it to the human in the same turn, by filename. |
 | Putting project specifics in this skill | They live in the docs repo; this skill stays generic. |
+| Letting a fact live only in a screenshot | The text must be complete without the image; the screenshot supplements, never replaces. |
+| Inventing visual detail in alt text | Describe only what the capture shows; do not add colors, labels, or counts you have not confirmed. |

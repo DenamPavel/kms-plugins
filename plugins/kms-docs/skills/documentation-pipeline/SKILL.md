@@ -23,7 +23,7 @@ If either is missing, ask before starting.
 
 ## The agents
 
-These six agents ship with this plugin. Dispatch each with the Task tool, using the agent's name (the left column below) as the subagent type. The pipeline needs no other plugin and no general-purpose agent; use the bundled agents, not a generic substitute, so the roles and model assignments hold.
+These seven agents ship with this plugin. Dispatch each with the Task tool, using the agent's name (the left column below) as the subagent type. The pipeline needs no other plugin and no general-purpose agent; use the bundled agents, not a generic substitute, so the roles and model assignments hold.
 
 | Agent | Model | Role |
 |-------|-------|------|
@@ -33,8 +33,11 @@ These six agents ship with this plugin. Dispatch each with the Task tool, using 
 | `doc-editor` | opus | Machine-writing tells, voice, structure |
 | `doc-coverage-critic` | sonnet | Shipped behavior the page omits |
 | `doc-reviser` | opus | Rewrite from intent, reject wrong findings |
+| `doc-screenshooter` | sonnet | Capture screenshots from the running product via the bundled Playwright script, with the safe-mode leakage guard |
 
 The editor runs on a different model than the writer, which satisfies the skill's "at least one reviewer on a different model" rule by construction.
+
+Capture is bundled too: `doc-screenshooter` drives this plugin's own Playwright script (`scripts/capture.mjs`), so the pipeline needs no other plugin. The capture stage does depend on Node, the `playwright` npm package, and a runnable instance of the product; a page with no screenshots skips that stage entirely.
 
 ## The pipeline
 
@@ -42,15 +45,39 @@ Track progress with TaskCreate so a long run does not lose its place.
 
 ### Stage 1 — Ground
 
-Dispatch `doc-investigator` on the source. It returns the user-facing surface, the DO-NOT-LEAK list, the actor vocabulary, the page-to-source map, and the existing-docs inventory. Save its report to a working file the later agents can read.
+Dispatch `doc-investigator` on the source. It returns the user-facing surface, the DO-NOT-LEAK list, the actor vocabulary, the page-to-source map, the existing-docs inventory, and a capture plan (the surfaces worth a screenshot, each with its navigation path, the state to set up, what the shot must show, and what must not appear in frame). Save its report to a working file the later agents can read.
 
 ### GATE 1 — Human review of scope
 
-Present to the human: the target, the DO-NOT-LEAK list, the coverage scope (what the page will and will not cover), and the page-to-source map. Get approval or corrections before drafting. Do not skip this gate.
+Present to the human: the target, the DO-NOT-LEAK list, the coverage scope (what the page will and will not cover), the page-to-source map, and the capture plan.
+
+For the capture plan, do two things with the human. First, approve which screenshots to keep. Second, agree a **safe-capture plan**: for each surface, how it will be rendered with no real data in frame. Do not assume the product already has a safe mode. Work the options through with the human and settle one per surface:
+
+- a built-in safe or demo mode that scopes displayed data to safe values;
+- a seeded or synthetic demo dataset, or a dedicated demo or staging instance;
+- a fresh or empty account that shows empty or sample states;
+- a surface that is inherently free of real data;
+- as a last resort, capture and then redact the sensitive region with a solid block.
+
+If a chosen option needs setup the pipeline cannot do itself (seeding a dataset, standing up a demo instance), that is a human action: pause for the human to do it, then resume. If no option makes a surface safe, drop it from the capture plan and document it in prose instead. Record the agreed safe-capture plan in the docs repo so later runs reuse it. Get approval or corrections before drafting. Do not skip this gate.
+
+### Stage 1.5 — Capture (only when the page needs screenshots)
+
+Skip this stage when the approved capture plan is empty or the product cannot be run in a safe-capture mode.
+
+Dispatch the bundled `doc-screenshooter` agent with the approved capture plan, the safe-capture plan, and the `writing-documentation` screenshot rules; it follows the `capturing-screenshots` skill. Leakage is prevented in layers, not by one check:
+
+1. **Safe state.** Render each surface using the safe-capture plan agreed at GATE 1 (a built-in safe mode, a seeded demo dataset, a demo instance, an empty account, or post-capture redaction). The plan is project-specific and lives in the docs repo.
+2. **Precondition assert.** Before each shot, the agent confirms the surface is in the safe state the plan specifies and aborts if it cannot. A forgotten safe-mode toggle or the wrong dataset is the likeliest leak, so catch it before the pixels exist rather than after.
+3. **Crop.** Capture the subject and trim surrounding chrome and unrelated panels.
+
+The agent navigates to each surface, sets up the required state, captures a cropped image to a scratch directory, and returns a manifest mapping each filename to its surface and state. Save the manifest with the working files.
+
+The orchestrator owns standing up the running instance in safe mode; that setup is project-specific. Keep raw captures in a gitignored scratch directory; only images a human approves at GATE 2 move into the docs image directory and the repo.
 
 ### Stage 2 — Draft
 
-Dispatch `doc-writer` with the skill and the approved ground truth. It writes the draft to a working path.
+Dispatch `doc-writer` with the skill, the approved ground truth, and the capture manifest. It writes the draft to a working path, embedding the approved screenshots where they earn their place, with alt text and captions per the rulebook.
 
 ### Stage 3 — Review (parallel, cross-model)
 
@@ -75,6 +102,7 @@ Present the finished page (a diff if it replaces a live page), the page-to-sourc
 ## After approval
 
 - Write the page to its destination.
+- Move the approved screenshots from the scratch directory into the docs image directory; leave the rest behind.
 - Add or update the page-to-source map in the docs repo.
 - Add the nearest code-to-docs note (in the closest `AGENTS.md` or `CLAUDE.md`): "if you change this, update `<page>`."
 - Flag every file touched.
@@ -83,4 +111,4 @@ Present the finished page (a diff if it replaces a live page), the page-to-sourc
 
 - A reviewer finding is input, not a verdict. The reviser may reject a finding that is wrong.
 - Keep project specifics (the controlled vocabulary, the page structure, the home of the page-to-source map) in the docs repo, not in this skill.
-- The pipeline scales down: for a tiny change, run ground → draft → fact-check → revise and skip the coverage critic. State when you skip a stage and why.
+- The pipeline scales down: for a tiny change, run ground → draft → fact-check → revise and skip the coverage critic. Skip the Capture stage for a prose-only page or any revision that does not touch a screen. State when you skip a stage and why.

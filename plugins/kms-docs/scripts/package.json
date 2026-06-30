@@ -1,0 +1,13 @@
+{
+  "name": "kms-docs-capture",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Bundled Playwright screenshot capture for the kms-docs documentation pipeline.",
+  "bin": {
+    "kms-docs-capture": "./capture.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
