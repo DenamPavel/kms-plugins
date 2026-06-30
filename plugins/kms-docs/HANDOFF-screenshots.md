@@ -2,9 +2,13 @@
 
 Last updated: 2026-06-30
 
-**Status:** feature code committed to `kms-plugins` `master`. Validated (see below). **Not released** — no version bump, no marketplace sync, no `claude plugin update` yet. Skill/agent prose is machine-written and not yet human-reviewed.
+**Status:** RELEASED as kms-docs **2.1.0** (marketplace kms-plugins **1.7.0**). Release commit `da34bfa`, pushed to `origin/master`; the feature commit `9cad5be` went up with it. `claude plugin marketplace update` + `claude plugin update kms-docs@kms-plugins` ran — the on-disk cache is now 2.1.0 with all 7 agents and the updated `writing-documentation` skill.
 
-This doc lets a fresh session pick up. Delete it once the feature is released and reviewed.
+**Blocker for the end-to-end run:** the CLI reported "Restart to apply changes." The session that did the release still had the pre-2.1.0 agent registry loaded, so `doc-screenshooter` was not dispatchable there (probe returned "Agent type not found"). **A fresh Claude Code session is required to load the 2.1.0 agents.** This is the only thing standing between here and exercising `doc-screenshooter` end-to-end.
+
+Still pending: (1) the end-to-end pipeline run on media-hub (exercises `doc-screenshooter`); (2) the external `~/Documents/GitHub/documentation-plugin` export sync; (3) human review of the machine-written skill/agent prose.
+
+This doc lets a fresh session pick up. Delete it once the run, the export, and the prose review are done.
 
 ## What this adds
 
@@ -55,7 +59,7 @@ Screenshot support for the kms-docs documentation pipeline: a page can include s
 
 ## Next steps (pickup)
 
-1. **Release / make it live** (use the `maintaining-a-marketplace` skill): bump `plugins/kms-docs/.claude-plugin/plugin.json` (2.0.1 → 2.1.0 suggested), sync the `kms-plugins` marketplace manifest, sync the separate `~/Documents/GitHub/documentation-plugin` export, then `claude plugin update`.
+1. ~~**Release / make it live**~~ — DONE for the marketplace (2.1.0 / 1.7.0, pushed, cache updated). **Restart Claude Code** so the new agents load, then verify with a trivial dispatch of `doc-screenshooter`. The `~/Documents/GitHub/documentation-plugin` external export was NOT synced yet — still to do.
 2. **Run the real pipeline** on media-hub (`/write-doc`) to produce the full guide with screenshots, exercising `doc-screenshooter` end-to-end. Record the media-hub safe-capture recipe above in media-hub's docs-repo per-project setup.
 3. **Human review** of the machine-written skill/agent prose before relying on it.
 4. **Optional:** investigate the `local=1` data-load coupling in media-hub.
