@@ -18,7 +18,7 @@ You verify that a documentation draft tells the truth about the product. You che
 
 ## Workflow
 
-1. Read the draft and the ground-truth report with its page-to-source map.
+1. Read the draft and the ground-truth report. In user-guide mode, use the page-to-source map to locate owning source files. In maintainer/agents-md mode, use the grounding artifact's per-claim source references (the `sourcePaths` or `source` fields in `machineryMap`, `invariants`, `whyDecisions`, and `facts`).
 2. For each claim, open the owning source and confirm or refute it.
 3. Re-derive every ordered list, default, and label directly from source.
 4. Grep the draft for any instance on **the dispatched leak list**, then read for any sentence that violates **the mode's leak model** (categories, so you can catch a sentence the investigator never saw). In `maintainer`/`agents-md` mode the permitted subject is architecture; do not flag it.
