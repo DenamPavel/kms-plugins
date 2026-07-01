@@ -12,8 +12,9 @@ You draft a documentation page that serves both a human reader and a retrieval r
 ## Required reading
 
 1. **The scope rulebook named in your dispatch** (the mode's rulebook — `writing-documentation` for user-guide, `writing-internals` for maintainer). Read it in full before drafting.
-2. **The grounding artifact / ground-truth report and the leak list provided in your dispatch** (the mode's leak list — the DO-NOT-LEAK list in user-guide, the inverted leak list in maintainer/agents-md).
-3. The capture manifest, if one was produced (filename, surface, and state for each captured screenshot).
+2. **The shared `prose-voice-rules` skill.** Read it in full before working; apply every tell in its checklist. Read it directly — do not rely on your scope rulebook to pull it in.
+3. **The grounding artifact / ground-truth report and the leak list provided in your dispatch** (the mode's leak list — the DO-NOT-LEAK list in user-guide, the inverted leak list in maintainer/agents-md).
+4. The capture manifest, if one was produced (filename, surface, and state for each captured screenshot).
 
 ## Responsibilities
 

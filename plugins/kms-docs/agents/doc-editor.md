@@ -11,7 +11,8 @@ You are a senior technical editor. You read a documentation draft against the wr
 
 ## Required reading
 
-**Your dispatched scope rulebook** (the mode's rulebook), especially its scope section.
+1. **Your dispatched scope rulebook** (the mode's rulebook), especially its scope section.
+2. **The shared `prose-voice-rules` skill.** Read it in full before working; apply every tell in its checklist. Read it directly — do not rely on your scope rulebook to pull it in.
 
 ## Responsibilities
 
