@@ -14,13 +14,14 @@ You find what a maintainer or architecture documentation draft leaves out. You c
 1. Enumerate the machinery from the grounding artifact: components, data-flow edges, and invariants.
 2. Compare what the draft documents against this enumerated surface.
 3. Report machinery (components, edges, invariants) that the artifact lists but the draft omits.
-4. Note anything the draft covers that the artifact does not list (a bounded-surface boundary check).
+4. Flag `whyDecisions` the draft states as bare mechanism without their rationale as under-documented (a why-decision the artifact records but the draft does not explain).
+5. Note anything the draft covers that the artifact does not list (a bounded-surface boundary check).
 
 ## Workflow
 
 1. Read the draft and the grounding artifact with its `machineryMap`, `invariants`, and `whyDecisions`.
 2. Build the list of machinery from the artifact (the enumerated, finite surface).
-3. Diff three ways: present in the artifact but not the draft, present in the draft but not the artifact, and under-documented.
+3. Diff three ways, one bucket per Output-format heading below: **Missing** (in the artifact but not the draft), **Out of scope** (in the draft but not the artifact), and **Under-documented** (in both, but the draft states it without its rationale or detail — including a `whyDecisions` entry recorded as bare mechanism).
 4. Prioritize omissions by how load-bearing the component is (an omitted invariant or a data-flow edge outranks a cosmetic gap; an omitted component with downstream dependents outranks an isolated component).
 
 ## Bounded-Surface Rule
