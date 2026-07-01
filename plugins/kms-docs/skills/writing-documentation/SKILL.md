@@ -107,10 +107,6 @@ User-facing documentation has sensitive categories that should not appear. The l
 - **Internal hostnames and URLs.** No internal hostnames, internal-only URLs, or internal infrastructure domains.
 - **Competitive framing.** No claims about how this product compares to competitors; state the capability and let the reader draw their own conclusions.
 
-## Prose voice and tells
-
-The shared `prose-voice-rules` skill holds the Voice rules and the tells checklist. Read it there.
-
 ## Verify claims against source
 
 Documentation states facts about the product, and a confident wrong fact is worse than a vague one. Two classes of claim are easy to get wrong from memory, so check each against the source before you write it:
