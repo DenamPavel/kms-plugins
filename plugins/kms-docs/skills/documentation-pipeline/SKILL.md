@@ -99,6 +99,12 @@ The orchestrator owns standing up the running instance in safe mode; that setup 
 
 Dispatch `doc-writer` with **the mode's scope rulebook**, the approved ground truth, and the capture manifest. It writes the draft to a working path, embedding the approved screenshots where they earn their place, with alt text and captions per the rulebook.
 
+**Orchestrator instruction to thread into the dispatch:**
+- **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."
+- **(b) Leak list:** Write into the task prompt: "The leak list for this mode is `<mode-leak-list>` (in user-guide mode this is the investigator's DO-NOT-LEAK list; in maintainer/agents-md mode this is the investigator's inverted leak list)."
+- **(c) Prose-voice-rules skill:** Write into the task prompt: "You must read the shared `prose-voice-rules` skill directly (path: `plugins/kms-docs/skills/prose-voice-rules/SKILL.md`). Do not rely on your scope rulebook to pull it in."
+- **(d) Active mode name:** Write into the task prompt: "The active mode is `<mode>` (one of `user-guide`, `maintainer`, `agents-md`)."
+
 ### Stage 3 — Review (parallel, cross-model)
 
 Dispatch these in parallel, each reading the draft and the ground truth:
@@ -109,11 +115,23 @@ Dispatch these in parallel, each reading the draft and the ground truth:
 
 In `agents-md` mode there is no coverage critic and no editor/reviser pass — see the AGENTS.md branch below.
 
+**Orchestrator instruction to thread into each dispatch:**
+- **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."
+- **(b) Leak list:** Write into the task prompt: "The leak list for this mode is `<mode-leak-list>` (in user-guide mode this is the investigator's DO-NOT-LEAK list; in maintainer/agents-md mode this is the investigator's inverted leak list)."
+- **(c) Prose-voice-rules skill (`doc-editor` only):** Write into `doc-editor`'s task prompt: "You must read the shared `prose-voice-rules` skill directly (path: `plugins/kms-docs/skills/prose-voice-rules/SKILL.md`). Do not rely on your scope rulebook to pull it in." (`doc-fact-checker` and the coverage critic do not read the tells checklist, so this item is not threaded to them.)
+- **(d) Active mode name:** Write into the task prompt: "The active mode is `<mode>` (one of `user-guide`, `maintainer`, `agents-md`)."
+
 Collect all findings. Deduplicate overlapping ones before revision.
 
 ### Stage 4 — Revise
 
 Dispatch `doc-reviser` with the draft and all findings. It applies **the mode's scope rulebook**, rewrites from intent, rejects wrong findings with reasons, closes coverage gaps, and writes the revised page.
+
+**Orchestrator instruction to thread into the dispatch:**
+- **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."
+- **(b) Leak list:** Write into the task prompt: "The leak list for this mode is `<mode-leak-list>` (in user-guide mode this is the investigator's DO-NOT-LEAK list; in maintainer/agents-md mode this is the investigator's inverted leak list)."
+- **(c) Prose-voice-rules skill:** Write into the task prompt: "You must read the shared `prose-voice-rules` skill directly (path: `plugins/kms-docs/skills/prose-voice-rules/SKILL.md`). Do not rely on your scope rulebook to pull it in."
+- **(d) Active mode name:** Write into the task prompt: "The active mode is `<mode>` (one of `user-guide`, `maintainer`, `agents-md`)."
 
 If the revise pass plausibly introduced new issues, re-run Stage 3 on the revised page. Loop until the reviewers are clean or the human accepts the remaining items.
 
