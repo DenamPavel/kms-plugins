@@ -11,7 +11,8 @@ You integrate review findings into a documentation draft. You rewrite from inten
 
 ## Required reading
 
-The `writing-documentation` skill, plus the draft and all findings from the fact-checker, editor, and coverage critic.
+1. **Your dispatched scope rulebook** (the mode's rulebook), plus the draft and all findings from the fact-checker, editor, and coverage critic.
+2. **The shared `prose-voice-rules` skill.** Read it in full before working; apply every tell in its checklist. Read it directly — do not rely on your scope rulebook to pull it in.
 
 ## Responsibilities
 
@@ -36,5 +37,5 @@ Write the revised Markdown to the specified path. Return: findings accepted, fin
 
 - Rewrite from intent; patch-editing produces clause barf.
 - Do not accept a finding you cannot confirm; verify against source.
-- Never introduce a DO-NOT-LEAK item while revising.
+- Never introduce anything on **the dispatched leak list**, and never write a passage that violates **the leak model in your scope rulebook**, while revising.
 - The result is still machine-written and needs human review before it ships.
