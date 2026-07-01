@@ -83,7 +83,7 @@ If a chosen option needs setup the pipeline cannot do itself (seeding a dataset,
 
 **In `maintainer` mode:** Present to the human: the target, the investigation's inverted leak list (the repo-specific secrets, tokens, hostnames, and real-data instances to keep out of the doc), and the coverage scope (the machinery the doc will and will not cover, from the grounding artifact's `machineryMap`). Show each machinery component and invariant together with the `sourcePaths` the investigator recorded. Presenting the source paths at GATE 1 keeps the maintainer gate symmetric with user-guide GATE 1, which shows a page-to-source map; the human should see the source grounding for the scope they approve, not first encounter it at GATE 2. Present no capture plan and no safe-capture plan (those are user-guide-only and are gated out by mode, not merely skipped for an empty plan). Get approval or corrections before drafting. Do not skip this gate.
 
-**In `agents-md` mode:** Present to the human: the target and the investigation's inverted leak list. Skip the machinery map (Stage 1 is the only investigation stage in this mode; the distiller does not draft a doc). Get approval or corrections before proceeding. Do not skip this gate.
+**In `agents-md` mode:** GATE 1 presents the target, the investigation's inverted leak list, and the boundary/coverage scope (the ✅/⚠️/🚫 `agentBoundaryBlock` plus the `machineryMap` coverage with source paths). This is analogous to the maintainer branch. No capture plan or safe-capture plan (those are user-guide-only). Get approval or corrections before distillation. The `agents-md`-alone path runs a **full** internals investigation (not a shallow variant), holds this GATE 1, then distills via `doc-agents-md`, then the result gate (defined below). Build/test/run commands come from the investigation's `facts` extraction; no surveyor is involved.
 
 ### Stage 1.5 — Capture (only when the page needs screenshots)
 
@@ -145,7 +145,18 @@ Present the finished page (a diff if it replaces a live page), the page-to-sourc
 
 ### In `agents-md` mode
 
-Skip Draft, Review, and Revise entirely. After the investigation and GATE 1, dispatch `doc-agents-md` (the distiller; added in Phase 5) to produce `AGENTS.md`, then hold a single result gate (Phase 5 defines its presentation). Do not dispatch `doc-writer`, `doc-editor`, `doc-reviser`, or a coverage critic.
+Skip Draft, Review, and Revise entirely. After the investigation and GATE 1, dispatch `doc-agents-md` (the distiller; added in Phase 5) to produce `AGENTS.md`, then hold a single result gate. Do not dispatch `doc-writer`, `doc-editor`, `doc-reviser`, or a coverage critic.
+
+**Result gate (agents-md mode):** After `doc-agents-md` distills the file, present to the human:
+- The drafted `AGENTS.md` (as rendered Markdown).
+- Extracted commands (flagging any the investigation could not verify).
+- `[TODO]` placeholders (sections needing human judgment).
+- The mechanical-filter report (lines flagged as manifest-derivable, lines kept).
+- A proposed optional `CLAUDE.md` bridge: "Claude Code does not read `AGENTS.md` natively. Would you like a thin `CLAUDE.md` at repo root with `@AGENTS.md` (or `@./AGENTS.md`) to import it? This syntax is verified against Claude Code 2.1.197. If you decline, only `AGENTS.md` will be written. If accepted and a `CLAUDE.md` already exists, the import will be prepended, not overwrite."
+
+The file is **written and committed only after this gate passes**. No further review pass; this gate is the review.
+
+**Facts precedence (Phase 7 vs. standalone):** Under `/document-project` (Phase 7), set-gate corrections override investigation-derived facts on conflict. In a standalone `agents-md` run (no project orchestrator), the investigation's extracted facts stand.
 
 ## After approval
 
