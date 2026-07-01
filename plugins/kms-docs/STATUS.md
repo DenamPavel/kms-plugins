@@ -36,6 +36,16 @@ Candidate app repos under `~/Documents/GitHub`. Triage column marks whether each
 | claude-local-skills | yes | skip | Skills repo. |
 | kms-plugins | yes | skip | This plugin marketplace. |
 
+## Pipeline modes
+
+As of the docsuite implementation (feature Phases 1–5, merged to `master` 2026-07-01), the pipeline is mode-parameterized. `/kms-docs:write-doc` takes an optional trailing `mode` argument (`user-guide` | `maintainer` | `agents-md`); omitting it defaults to `user-guide` and reproduces the original single-page behavior. An unrecognized mode is refused, not silently defaulted.
+
+- **`user-guide`** (default) — a user-facing product page. Full flow with screenshots: ground → GATE 1 → capture → draft → cross-model review → revise → GATE 2.
+- **`maintainer`** — a machinery/architecture doc. Grounds via `doc-internals-investigator` (schema-pinned grounding artifact + inverted leak list), writer/editor/reviser apply the `writing-internals` scope, no capture stage. GATE 1 → draft → review → revise → GATE 2.
+- **`agents-md`** — a distilled `AGENTS.md`. Full internals investigation, no writer/editor/reviser and no coverage critic; `doc-agents-md` distills, a deterministic manifest-dedup filter runs, and a single result gate precedes writing. Optional `@AGENTS.md` `CLAUDE.md` bridge offered.
+
+This ledger tracks `user-guide` runs against real apps. Feature Phases 6–8 (survey, `/document-project` multi-doc orchestration, release) are a separate later plan.
+
 ## How to run
 
-Invoke `/write-doc` and give it the target page and source repo path. The pipeline runs ground → GATE 1 → draft → cross-model review → revise → GATE 2, then writes the page, updates the page-to-source map, and adds a code-to-docs note in the nearest `CLAUDE.md`. Record the result here.
+Invoke `/kms-docs:write-doc "<target> <repo-path> [mode]"`. For a user-guide page (no mode), the pipeline runs ground → GATE 1 → capture → draft → cross-model review → revise → GATE 2, then writes the page, updates the page-to-source map, and adds a code-to-docs note in the nearest `CLAUDE.md`. Record the result here. For `maintainer`/`agents-md` runs, see the mode descriptions above.

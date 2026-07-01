@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-01
 
-**Status: design plan FINALIZED (2026-07-01). ACs approved by the operator; Summary + Glossary generated; committed. Next action is the Phase 6 implementation-plan handoff (below). Delete this handoff once that handoff is done.**
+**Status: design FINALIZED and feature Phases 1–5 IMPLEMENTED (2026-07-01). The implementation plan (`docs/implementation-plans/2026-07-01-docsuite/`) was created, executed, and merged to `master`. Remaining: feature Phases 6–8 (survey, `/document-project` multi-doc orchestration, release) as a separate later plan. This file is retained for its design-decision and review history; the original "NEXT SESSION" design-finalization steps below are all done. A durable manual-test fixture lives at `~/Documents/GitHub/docsuite-testbed/` and the human test plan at `docs/test-plans/2026-07-01-docsuite.md`.**
 
 ## What this is
 
@@ -40,14 +40,20 @@ Running `ed3d-plan-and-execute:starting-a-design-plan`. Completed: Phase 1 (cont
 - **Leak-flow re-review (2026-07-01, fourth fix — Opus, targeted):** found four more gaps on the same fault line, all now fixed. (1) `doc-agents-md` emits a *committed* `AGENTS.md` but had zero leak coverage, and the leak list was scoped to "doc prose," structurally excluding it — added it as a leak consumer, broadened the leak-list definition to "any emitted artifact," added AC4.7. (2) The model/list split I introduced left the fact-checker with the *list* but not the *model*, degrading its leak check to string-matching — now every leak-aware consumer reads both model (categories) and list (instances). (3) The capture-plan leak producer was severed for maintainer/agents-md only by an empty-plan accident; now the capture stage + GATE 1 safe-capture negotiation are gated on mode explicitly. (4) No AC tested that the investigator *produces* the leak list (only consumption) — added AC3.5. Dispatch table, DoD, Phases 1/3/4/5/8 updated.
 - **PENDING: AC approval** from the operator, then Summary + Glossary generation, then final commit. Note: four consecutive review rounds each found one adjacent gap on the leak/mode fault line; the fourth found four (one self-inflicted by the model/list split). The leak surface now appears fully enumerated (producers, consumers, model+list routing, producer+consumer ACs), but that is a judgment call, not a proof.
 
-## NEXT SESSION — do this
+## Done (design → implementation)
 
-1. **Run the Sonnet 5 adversarial review** against `docs/design-plans/2026-07-01-docsuite.md`. Dispatch a `general-purpose` agent with `model: sonnet` (should resolve to Sonnet 5 after the CC update — confirm the model actually used). Use the same adversarial-review prompt shape as before: skeptical, verify claims against `plugins/kms-docs`, output VERDICT / TOP CONCERNS (ranked, with fixes) / SMALLER NOTES / WHAT'S MISSING. The prior two reviews already covered the obvious contract gaps, so ask Sonnet 5 to focus on what those missed.
-2. **Integrate accepted findings** into the design doc (rewrite from intent, reject wrong findings).
-3. **Get AC approval** from the operator (they had not formally approved when we paused).
-4. **Generate Summary + Glossary** via a fresh-context subagent per the `writing-design-plans` skill, replace the placeholders.
-5. **Commit the finalized design doc.**
-6. **Phase 6 handoff:** give the operator the copy-then-`/clear`-then-`/ed3d-plan-and-execute:start-implementation-plan @docs/design-plans/2026-07-01-docsuite.md .` workflow.
+The original design-finalization steps (Sonnet 5 adversarial review, integrate findings, AC approval, Summary + Glossary, commit the design doc, Phase 6 implementation-plan handoff) are all complete. Beyond them, the implementation plan for feature Phases 1–5 was written to `docs/implementation-plans/2026-07-01-docsuite/`, executed task-by-task with per-phase code review, and merged to `master` on 2026-07-01. Verification: subagent RED-GREEN across the rulebooks/agents, an automated node-smoke-test for `agents-md-filter.mjs`, and an empirical `@AGENTS.md`-import check against the installed Claude Code (2.1.197). Phase 1 (mode dispatch + refusal) re-run clean; the rest of the human test plan is at `docs/test-plans/2026-07-01-docsuite.md`.
+
+## Remaining — feature Phases 6–8 (separate later plan)
+
+Not started. Per the design doc's phase scope:
+- **Phase 6** — the app survey / backlog triage flow.
+- **Phase 7** — `/document-project` multi-doc orchestration (run-id-keyed scratch lifecycle, set-gate corrections overriding investigation-derived facts, concurrent-run isolation).
+- **Phase 8** — durable hand-labeled fixtures, the formal standalone acceptance test, the bundled cross-plugin static-check script, and release (version bump + CHANGELOG; plugin is still at 2.1.0).
+
+Two housekeeping items surfaced during 1–5 review, deferred here: (1) `writing-documentation/SKILL.md:8` still points to the external `kms-human-voice` skill, now redundant with the bundled `prose-voice-rules` fragment; (2) the Phase 8 static-check script must exclude the standalone-posture declaration line in `doc-internals-investigator.md:79` (a benign grep false positive).
+
+To start 6–8: copy the design doc, `/clear`, then `/ed3d-plan-and-execute:start-implementation-plan @docs/design-plans/2026-07-01-docsuite.md` scoped to Phases 6–8.
 
 ## Notes
 
