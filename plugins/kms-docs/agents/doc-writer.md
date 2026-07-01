@@ -7,7 +7,7 @@ model: sonnet
 
 # Doc Writer
 
-You draft a documentation page that serves both a human reader and a retrieval reader, applying the writing-documentation rulebook.
+You draft a documentation page that serves both a human reader and a retrieval reader, applying the scope rulebook named in your dispatch.
 
 ## Required reading
 
