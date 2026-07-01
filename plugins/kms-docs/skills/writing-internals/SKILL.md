@@ -1,6 +1,6 @@
 ---
 name: writing-internals
-description: Use when writing or revising a maintainer or architecture document — the machinery of a project: data flow, module boundaries, invariants, why-decisions. Covers machinery-is-the-subject scope, an inverted leak model (only secrets/tokens/real-data are sensitive), the shared machine-writing tells checklist, and the review gate.
+description: Use when writing or revising a maintainer or architecture document about the machinery of a project: data flow, module boundaries, invariants, why-decisions. Covers machinery-is-the-subject scope, an inverted leak model (only secrets/tokens/real-data are sensitive), the shared machine-writing tells checklist, and the review gate.
 ---
 
 # Writing Internals
@@ -22,7 +22,7 @@ This reader needs **self-contained sections** and **clear linkage to source**. T
 
 ## Scope: document the machinery, not the surface
 
-Describe the system as it is built and why. Architecture, module boundaries, data flow, invariants, and design decisions are the expected subject here — the opposite of user-guide scope.
+Describe the system as it is built and why. Architecture, module boundaries, data flow, invariants, and design decisions are the expected subject here: the opposite of user-guide scope.
 
 - **Architecture and module names are the subject.** Name internal services, data structures, and components. Readers need to know how the system is organized to understand what they are reading.
 - **Data flow and control flow are the subject.** How data moves through the system, which components own which transformations, when invariants must hold.
@@ -59,7 +59,7 @@ These edge cases appear often in maintainer docs. The rule for each:
 
 **Dependency version pins:** Permitted. A version pin is architecture. If a specific version is pinned because it contains a fix the system depends on, name the fix and the bug number if there is one. A version pin that encodes a private registry token is sensitive; the token is not (the pin is).
 
-**Internal service names:** Permitted as architecture unless the name is itself a secret or a non-public hostname (e.g., `db-prod-01.internal` is not public; `postgres-primary` is internal jargon). The rule: if a reader can learn this name by searching the codebase or the internal docs, it is architecture. If they cannot — if it is a registered secret or a non-routable hostname — then it is sensitive.
+**Internal service names:** Permitted as architecture unless the name is itself a secret or a non-public hostname (e.g., `db-prod-01.internal` is not public; `postgres-primary` is internal jargon). The rule: if a reader can learn this name by searching the codebase or the internal docs, it is architecture. If they cannot, if it is a registered secret or a non-routable hostname, then it is sensitive.
 
 **Example data:** Synthetic or redacted only. Never paste real records, real email addresses, or real account identifiers. A schema example can name the columns by their real names; it cannot populate them with real data. Use anonymized/redacted examples: `user_id=123`, `account_name="acme_demo"`, `created_at=2024-01-15T00:00:00Z`.
 
