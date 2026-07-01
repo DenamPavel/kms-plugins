@@ -67,11 +67,11 @@ Track progress with TaskCreate so a long run does not lose its place.
 
 Dispatch **the mode's investigator** (see the mode table) on the source. It returns the user-facing surface, the mode's leak list, the actor vocabulary, the page-to-source map, the existing-docs inventory, and a capture plan (the surfaces worth a screenshot, each with its navigation path, the state to set up, what the shot must show, and what must not appear in frame). Save its report to a working file the later agents can read.
 
+**In `maintainer` and `agents-md` modes, for standalone runs:** When no scratch path was supplied by a caller, create a single-invocation scratch directory outside the target repo with `mktemp -d`. Thread its path to the investigator as the artifact location and to every downstream agent that reads the artifact. Clean it up when the run finishes (success or abort). Do not create it inside the target repo. If a caller (the project orchestrator) already supplied a scratch path, use that and do not create or clean one; the caller owns the lifecycle. Run-id keying, concurrent-run isolation, and on-entry/on-exit cleanup for multi-doc runs are Phase 7's job; the standalone case only needs a single directory held for one invocation's lifetime.
+
 ### GATE 1 — Human review of scope
 
-Present to the human: the target, **the mode's leak list**, the coverage scope (what the page will and will not cover), the page-to-source map, and the capture plan.
-
-**In `user-guide` mode only:** For the capture plan, do two things with the human. First, approve which screenshots to keep. Second, agree a **safe-capture plan**: for each surface, how it will be rendered with no real data in frame. Do not assume the product already has a safe mode. Work the options through with the human and settle one per surface:
+**In `user-guide` mode:** Present to the human: the target, the mode's leak list, the coverage scope (what the page will and will not cover), the page-to-source map, and the capture plan. For the capture plan, do two things with the human. First, approve which screenshots to keep. Second, agree a **safe-capture plan**: for each surface, how it will be rendered with no real data in frame. Do not assume the product already has a safe mode. Work the options through with the human and settle one per surface:
 
 - a built-in safe or demo mode that scopes displayed data to safe values;
 - a seeded or synthetic demo dataset, or a dedicated demo or staging instance;
@@ -80,6 +80,10 @@ Present to the human: the target, **the mode's leak list**, the coverage scope (
 - as a last resort, capture and then redact the sensitive region with a solid block.
 
 If a chosen option needs setup the pipeline cannot do itself (seeding a dataset, standing up a demo instance), that is a human action: pause for the human to do it, then resume. If no option makes a surface safe, drop it from the capture plan and document it in prose instead. Record the agreed safe-capture plan in the docs repo so later runs reuse it. Get approval or corrections before drafting. Do not skip this gate.
+
+**In `maintainer` mode:** Present to the human: the target, the investigation's inverted leak list (the repo-specific secrets, tokens, hostnames, and real-data instances to keep out of the doc), and the coverage scope (the machinery the doc will and will not cover, from the grounding artifact's `machineryMap`). Show each machinery component and invariant together with the `sourcePaths` the investigator recorded. Presenting the source paths at GATE 1 keeps the maintainer gate symmetric with user-guide GATE 1, which shows a page-to-source map; the human should see the source grounding for the scope they approve, not first encounter it at GATE 2. Present no capture plan and no safe-capture plan (those are user-guide-only and are gated out by mode, not merely skipped for an empty plan). Get approval or corrections before drafting. Do not skip this gate.
+
+**In `agents-md` mode:** Present to the human: the target and the investigation's inverted leak list. Skip the machinery map (Stage 1 is the only investigation stage in this mode; the distiller does not draft a doc). Get approval or corrections before proceeding. Do not skip this gate.
 
 ### Stage 1.5 — Capture (only when the page needs screenshots)
 
@@ -137,7 +141,7 @@ If the revise pass plausibly introduced new issues, re-run Stage 3 on the revise
 
 ### GATE 2 — Human review of the result
 
-Present the finished page (a diff if it replaces a live page), the page-to-source map, the accepted and rejected findings, and a plain statement that this is machine-written and needs human review before it ships. Do not write over a live page without this gate.
+Present the finished page (a diff if it replaces a live page), the page-to-source map (in user-guide mode this maps page sections to source files; in maintainer mode it maps machinery claims to source), the accepted and rejected findings, and a plain statement that this is machine-written and needs human review before it ships. Do not write over a live page without this gate.
 
 ### In `agents-md` mode
 
