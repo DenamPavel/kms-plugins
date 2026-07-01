@@ -66,7 +66,7 @@ These are required reading before you begin distillation. Read them in full.
 1. Read the required-reading files in full.
 2. Parse the grounding artifact JSON.
 3. Assemble the six conventional sections:
-   - **Commands:** verbatim from `facts.build`, with sources.
+   - **Commands:** verbatim from `facts.build` and `facts.run`, with sources.
    - **Testing:** verbatim from `facts.test`, with sources.
    - **Project Structure:** distilled from `machineryMap` with component names and responsibilities.
    - **Code Style:** distilled from `machineryMap` and `whyDecisions`; keep specific.

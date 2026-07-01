@@ -8,12 +8,13 @@ Every project `AGENTS.md` follows this structure:
 
 ### 1. Commands
 
-Build commands for the project. Copy the command **verbatim** from the build manifest (e.g., `package.json#scripts.build`, `Makefile`). Cite the source. Example:
+Build and run commands for the project (from `facts.build` and `facts.run`). Copy the command **verbatim** from the manifest (e.g., `package.json#scripts.build`, `Makefile`). Cite the source. Example:
 
 ```
 Commands
 
 Build: npm run build (from package.json#scripts.build)
+Run: node index.js (from package.json#scripts.start)
 ```
 
 If the investigation could not verify a command, flag it and note the reason.
