@@ -9,6 +9,7 @@ Status values: **done** (page written, both gates passed), **in progress** (a ru
 | App | Page | Source repo | Run date | Notes |
 |-----|------|-------------|----------|-------|
 | counts-builder | `docs/counts-builder-guide.md` | `i-360/analytics/political/counts-builder` (branch `dev`) | 2026-06-29 | End-user guide. Page-to-source map at `docs/page-to-source-map.md`; code-to-docs note in repo `CLAUDE.md`. Tags counts limited to AFP and NRA orgs. |
+| media-hub | `docs/user-guide.md` (Campaign Tracker section) | `i-360/analytics/media-hub` (branch `dev`) | 2026-06-30 | Rewrote the Campaign Tracker section and added 6 screenshots across the guide (Campaign Tracker, Campaign Edits, Channel Report, MCode Editor); first run to exercise `doc-screenshooter`. Safe-capture recipe at `docs/_meta/safe-capture.md`. Human review passed; out for external review. New Campaign shot blocked by an app-level copy-from placeholder leak (see repo issue). |
 
 ## Backlog
 
@@ -22,7 +23,6 @@ Candidate app repos under `~/Documents/GitHub`. Triage column marks whether each
 | construction-heatmap | yes | app | |
 | dmv-retention | yes | app | |
 | voter-contact-planner | yes | app | |
-| media-hub | yes | app | |
 | legal-timeline | yes | app | |
 | Investability | yes | app | |
 | building_products_indices | yes | app | |
