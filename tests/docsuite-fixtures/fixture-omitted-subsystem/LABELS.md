@@ -2,28 +2,28 @@
 
 ## Omitted Subsystem (Must Be Flagged)
 
-The actual source code includes a **Cache subsystem** (`src/cache.js`, `CacheManager` class) that is deliberately omitted from `draft.md`.
+The grounding artifact's machinery map includes a **Cache subsystem** (`src/cache.js`, `CacheManager` class) that is deliberately omitted from `draft.md`.
 
 ### Expected Detection
 
-When `doc-internals-critic` compares the draft against the actual source machinery:
+When `doc-internals-critic` compares the draft against the grounding artifact's `machineryMap`:
 
-1. It should enumerate all modules in the source: `data-store.js`, `reporting.js`, `cache.js`
+1. It should enumerate all components in the grounding artifact: `DataStore`, `ReportGenerator`, `CacheManager`
 2. It should cross-reference against the draft's documented subsystems: Data Store, Reporting
-3. It should flag the **Cache** subsystem as undocumented in the draft
+3. It should flag the **CacheManager** component as undocumented in the draft but present in the grounding artifact
 
 ### Exact Match for Testing
 
 The subsystem name to flag is:
 
 ```
-Cache
+CacheManager
 ```
 
 Or more specifically, the critic should report:
 
 ```
-Undocumented subsystem: CacheManager (src/cache.js) found in source but not in draft
+Undocumented subsystem: CacheManager (src/cache.js) found in grounding artifact but not in draft
 ```
 
 ## Why This Fixture Is Structured This Way

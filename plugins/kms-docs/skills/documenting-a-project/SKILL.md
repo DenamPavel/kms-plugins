@@ -27,7 +27,7 @@ Acquire a lock so a second run on the same repo cannot start concurrently:
 ## Step 1 — Run-scoped scratch dir (grounding-artifact lifecycle owner)
 
 1. Create the scratch root OUTSIDE the target repo: `SCRATCH=$(mktemp -d -t docsuite-run-XXXXXX)`. `mktemp -d` yields a fresh, empty, uniquely-named dir, which gives per-run isolation (concurrent runs never share a scratch dir) and satisfies on-entry idempotency by construction (nothing to clean in a fresh dir).
-2. **Never** create the scratch dir inside `<repo>`; the grounding artifact must not risk being committed into the target repo. (The stale `HANDOFF-docsuite.md:28` `.kms-run` path is superseded — ignore it.)
+2. **Never** create the scratch dir inside `<repo>`; the grounding artifact must not risk being committed into the target repo. (An earlier decision to place it inside the repo's `docs/` is superseded — the scratch dir stays outside the repo.)
 3. Thread `SCRATCH` into every per-doc engine dispatch as the caller-supplied scratch path; the engine writes/reads the grounding artifact there and does not create or clean its own (`documentation-pipeline/SKILL.md:70`). The internals investigation writes the pinned-schema artifact as `$SCRATCH/grounding.json` (per `grounding-artifact-schema.md`); the maintainer writer and the `AGENTS.md` distiller read that same file within the run.
 4. On exit (success or abort), remove `SCRATCH` (`rm -rf "$SCRATCH"`). The grounding artifact is run-scoped and never persists across runs; the durable record is each doc's page-to-source map, committed by the engine.
 

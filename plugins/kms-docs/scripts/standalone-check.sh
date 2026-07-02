@@ -14,7 +14,7 @@ ROOTS=("$PLUGIN_DIR/agents" "$PLUGIN_DIR/skills" "$PLUGIN_DIR/commands" "$PLUGIN
 FORBIDDEN='ed3d-|general-purpose|kms-[a-z]'
 
 # Standalone-posture declaration sentences are ALLOWED to name the forbidden tokens (as things NOT invoked).
-ALLOW='invokes? no|no external|no other plugin|no general-purpose|not a generic|standalone posture|no cross-plugin|without ed3d|stale|superseded|ignore'
+ALLOW='invokes? no|no external|no other plugin|no general-purpose|not a generic|standalone posture|no cross-plugin|without ed3d'
 
 fail=0
 files=()
