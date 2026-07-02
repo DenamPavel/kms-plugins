@@ -24,12 +24,6 @@
             "description": "Self-contained writing style enforcement: anti-AI phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, intensity modulation, structural prose tells, and direct communication",
             "version": "1.3.0",
             "source": "./plugins/kms-human-voice"
-        },
-        {
-            "name": "insight-essay-bot",
-            "description": "Analytical essay writing and editing skills: kontextmaschine-style system excavations that reveal the material, institutional, and economic machinery behind everyday subjects",
-            "version": "0.1.0",
-            "source": { "source": "github", "repo": "DenamPavel/InsightEssayBot" }
         }
     ]
 }

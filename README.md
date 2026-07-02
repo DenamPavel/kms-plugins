@@ -46,14 +46,6 @@ A documentation pipeline. The `writing-documentation` skill is the rulebook: the
 claude plugin install kms-docs@kms-plugins
 ```
 
-### insight-essay-bot
-
-Analytical essay skills in the style of kontextmaschine: excavate the gap between what a subject appears to be and the material, institutional, and economic conditions that produced it. Three skills (explore, write, edit). Lives in its own repo at [DenamPavel/InsightEssayBot](https://github.com/DenamPavel/InsightEssayBot) and is cataloged here for one-step install.
-
-```
-claude plugin install insight-essay-bot@kms-plugins
-```
-
 ## Why Code Mode?
 
 When building MCP servers, the default approach is to expose each API operation as a native tool call. The LLM selects tools and calls them one by one. This works, but it has a ceiling.
