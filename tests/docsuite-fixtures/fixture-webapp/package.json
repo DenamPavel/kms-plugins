@@ -1,0 +1,16 @@
+{
+  "name": "fixture-webapp",
+  "version": "1.0.0",
+  "description": "Durable test fixture: a runnable web app with safe/demo mode and planted secrets for leak testing.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "node --input-type=module -e \"process.env.DEMO_MODE='true'; await import('./src/index.js')\"",
+    "build": "echo 'No build step (pure Node)'",
+    "test": "node --input-type=module -e \"console.log('Tests pass')\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

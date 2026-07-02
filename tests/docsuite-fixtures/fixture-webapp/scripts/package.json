@@ -1,0 +1,9 @@
+{
+  "name": "fixture-webapp-scripts",
+  "version": "1.0.0",
+  "description": "Capture dependencies for fixture-webapp",
+  "type": "module",
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
