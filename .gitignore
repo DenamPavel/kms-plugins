@@ -3,3 +3,6 @@
 
 # Node
 node_modules/
+
+# Git worktrees (isolated implementation workspaces)
+.worktrees/
