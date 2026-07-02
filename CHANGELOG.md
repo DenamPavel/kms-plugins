@@ -1,5 +1,10 @@
 # Changelog
 
+## kms-plugins 1.8.0
+
+**Removed:**
+- `insight-essay-bot`: dropped from the marketplace catalog and the README. It lives on in its own repo at `DenamPavel/InsightEssayBot`; it is no longer cataloged or installable via `@kms-plugins`.
+
 ## kms-plugins 1.7.0
 
 kms-docs gains screenshot capture.

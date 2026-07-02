@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "kms-plugins",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "description": "KMS Claude Code plugins",
     "owner": {
         "name": "KMS"
