@@ -106,7 +106,7 @@ Branch on the execution intent:
 
 **If intent is `write`:** Dispatch `doc-writer` with **the mode's scope rulebook**, the approved ground truth, and the capture manifest. It writes the draft from scratch to a working path, embedding the approved screenshots where they earn their place, with alt text and captions per the rulebook.
 
-**If intent is `audit`:** Dispatch `doc-reviser` directly, without `doc-writer`. Pass the **existing target page** as the base, **the mode's scope rulebook**, the approved ground truth, and the capture manifest. Treat this as a **revision** — the reviser re-grounds against the existing page and rewrites for accuracy and coverage, updating the page-to-source map rather than authoring from scratch. Skip the dedicated writer and review stages; go directly to revision. Then proceed to GATE 2 (skip Review/Stage 3 for `audit` runs).
+**If intent is `audit`:** Dispatch `doc-reviser` as the drafting step, without `doc-writer`. Pass the **existing target page** as the base, **the mode's scope rulebook**, the approved ground truth, and the capture manifest. Treat this as **revision of the existing page** — the reviser re-grounds against it and rewrites for accuracy and coverage, updating the page-to-source map rather than authoring from scratch. The output of this stage is a revised draft that flows into the normal review pipeline (Stage 3).
 
 **Orchestrator instruction to thread into the dispatch:**
 - **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."
@@ -115,8 +115,6 @@ Branch on the execution intent:
 - **(d) Active mode name:** Write into the task prompt: "The active mode is `<mode>` (one of `user-guide`, `maintainer`, `agents-md`)."
 
 ### Stage 3 — Review (parallel, cross-model)
-
-**This stage runs only when intent is `write`.** When intent is `audit`, skip to GATE 2 after the revision (Stage 2 goes straight to reviser, not writer + reviewers).
 
 Dispatch these in parallel, each reading the draft and the ground truth:
 
@@ -136,9 +134,7 @@ Collect all findings. Deduplicate overlapping ones before revision.
 
 ### Stage 4 — Revise
 
-**In `write` mode:** Dispatch `doc-reviser` with the draft and all findings from Stage 3. It applies **the mode's scope rulebook**, rewrites from intent, rejects wrong findings with reasons, closes coverage gaps, and writes the revised page.
-
-**In `audit` mode:** (Already done in Stage 2 — this stage does not repeat.)
+Dispatch `doc-reviser` with the draft and all findings from Stage 3. It applies **the mode's scope rulebook**, rewrites from intent, rejects wrong findings with reasons, closes coverage gaps, and writes the revised page.
 
 **Orchestrator instruction to thread into the dispatch:**
 - **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."

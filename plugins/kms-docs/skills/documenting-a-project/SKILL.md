@@ -13,7 +13,7 @@ You orchestrate documentation for an entire project: propose a doc set, get it a
 
 ## Overview of the run
 
-survey → SET GATE → per doc in sequence (user guide → maintainer → `AGENTS.md`), each through the existing engine and its gates → update the committed ledger. A default 3-doc run passes exactly **6 gates**: set gate (1) + user guide GATE 1 and GATE 2 (2) + maintainer GATE 1 and GATE 2 (2) + `AGENTS.md` single result gate (1) = 6.
+survey → SET GATE → per doc in sequence (user guide → maintainer → `AGENTS.md`), each through the existing engine and its gates → update the committed ledger. A default 3-doc run passes exactly **6 gates**: set gate (1) + user guide GATE 1 and GATE 2 (2) + maintainer GATE 1 and GATE 2 (2) + `AGENTS.md` result gate (1) = 6. (Under `/document-project`, the orchestrator suppresses agents-md's engine-level GATE 1 because the set gate already approved the scope; agents-md runs with only the result gate.)
 
 ## Step 0 — Concurrent-run lock
 
@@ -53,7 +53,7 @@ The ledger is committed at `<repo>/docs/.docsuite-ledger.md` and is owned solely
 - **Fresh run (no ledger):** after set-gate approval, create the ledger with one row per approved doc at status `pending`, recording each doc's mode and intent (write / audit).
 - **Resume run (ledger exists):** read it. For each doc:
   - status `done` → **skip**.
-  - status `investigation-done` (maintainer/agents-md) → the grounding artifact is run-scoped and this is a new run, so the prior artifact is gone: **demote to `pending` and re-investigate**. Do not treat a stale `investigation-done` as satisfied.
+  - status `investigation-done` (maintainer/agents-md) → the grounding artifact is run-scoped (per Step 1, each new run creates a fresh `mktemp` scratch dir), so the prior artifact from the last run is gone. **Demote to `pending` and re-investigate** (Step 5's artifact check below will verify this). Do not treat a stale `investigation-done` as satisfied.
   - status `gate2-passed` → the doc already cleared its final human gate; a crash between GATE 2 and the `done` write left it here. **Advance it to `done` and skip** — do NOT re-run the pipeline or re-ask the human gates for an already-approved doc, and do not re-promote already-committed output.
   - status `doc-failed` or `investigation-failed` → present at the set gate; if the human re-approves the doc, reset it to `pending`.
   - any genuinely-intermediate status (`grounded`, `gate1-passed`, `drafted`) → resume from `pending` (re-ground), since that doc's scratch state does not persist across runs and it has not yet been human-approved at GATE 2.
@@ -69,13 +69,15 @@ Run the approved docs in this order: **user guide → maintainer → `AGENTS.md`
 - the caller-supplied scratch path `SCRATCH`;
 - for maintainer and `AGENTS.md`, the corrected-facts record from Step 3.
 
-Update the ledger at each milestone (`grounded`/`investigation-done`, `gate1-passed`, `drafted`, `gate2-passed`, `done`). The engine still holds its own GATE 1 and GATE 2 (user guide, maintainer) or single result gate (`AGENTS.md`).
+**Agents-md gate suppression instruction:** When dispatching the engine for `agents-md` mode, instruct it to suppress the engine's GATE 1 (scope/boundary review) and hold only the result gate. Rationale: agents-md has no drafting/review/revision stages, so its scope GATE 1 is redundant with the set gate already held by the orchestrator; maintainer's GATE 1 presents both the leak list and the machinery scope that drive a full draft/review/revise pass, so it is retained. The net effect is 1 set gate + 2 gates per (user guide, maintainer) + 1 result gate for agents-md = 6 gates total for a 3-doc run.
+
+Update the ledger at each milestone (`grounded`/`investigation-done`, `gate1-passed`, `drafted`, `gate2-passed`, `done`). For `agents-md`, the engine holds only the result gate, not GATE 1 and GATE 2; update the ledger accordingly (`investigation-done` when the investigation completes, then direct to result gate, then `done` or `doc-failed` after GATE result is final).
 
 ### Failure policy (dependency: `AGENTS.md` depends on the maintainer *investigation*)
 
-**Observable success signal.** Investigation success is not a narrated status; it is a checkable artifact. After the investigation stage, the maintainer investigation is considered to have **succeeded** only if `$SCRATCH/grounding.json` exists AND passes the pinned schema-validity check (the same check AC3.1 relies on). If that file is absent or fails schema validation, the investigation **failed**. Decide `investigation-done` vs `investigation-failed` on this condition, not on prose.
+**Observable success signal.** Investigation success is not a narrated status; it is a checkable artifact. After the investigation stage, the maintainer investigation is considered to have **succeeded** only if `$SCRATCH/grounding.json` exists AND passes schema validation. **You (the orchestrator) validate `$SCRATCH/grounding.json` against the Validation Rules in `plugins/kms-docs/skills/documentation-pipeline/grounding-artifact-schema.md`** (the "An artifact is schema-valid if and only if…" section). If that file is absent or fails validation, the investigation **failed**. Decide `investigation-done` vs `investigation-failed` on this condition, not on prose.
 
-- If the **maintainer investigation** fails (no valid `$SCRATCH/grounding.json`), mark the maintainer doc `investigation-failed` and **halt `AGENTS.md`** (it has no grounding artifact to distill). Mark `AGENTS.md` blocked/`pending` and report it.
+- If the **maintainer investigation** fails (no valid `$SCRATCH/grounding.json`), mark the maintainer doc `investigation-failed` and **halt `AGENTS.md`** (it has no grounding artifact to distill). Mark `AGENTS.md` `pending` (halted due to missing maintainer investigation) and report it.
 - If the maintainer doc has a **valid investigation** but fails later (drafting or GATE 2), mark it `doc-failed`. This does **not** block `AGENTS.md` — the grounding artifact exists in `SCRATCH` and `AGENTS.md` distills from it.
 - **Independent docs proceed regardless.** The user guide never blocks the maintainer/`AGENTS.md` docs and vice versa.
 
