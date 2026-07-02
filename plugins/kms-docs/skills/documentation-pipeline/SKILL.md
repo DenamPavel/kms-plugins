@@ -88,6 +88,8 @@ If a chosen option needs setup the pipeline cannot do itself (seeding a dataset,
 
 ### Stage 1.5 — Capture (only when the page needs screenshots)
 
+Before dispatching `doc-screenshooter`, run the first-run dependency check from the `capturing-screenshots` skill: verify that `<this plugin>/scripts/node_modules` is present. If it is absent, follow that skill's stop-and-offer procedure — present the install command `(cd "<this plugin>/scripts" && npm install)` and ask the runner to choose between installing now (then continuing with capture) or proceeding image-less (skipping this stage entirely).
+
 **This stage runs only in `user-guide` mode.** In `maintainer` and `agents-md` mode there is no capture plan and this stage is skipped entirely. Within `user-guide` mode, also skip when the approved capture plan is empty or the product cannot be run in a safe-capture mode.
 
 Dispatch the bundled `doc-screenshooter` agent with the approved capture plan, the safe-capture plan, and the `writing-documentation` screenshot rules; it follows the `capturing-screenshots` skill. Leakage is prevented in layers, not by one check:

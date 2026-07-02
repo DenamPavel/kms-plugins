@@ -17,6 +17,23 @@ This is the structural form of the `writing-documentation` rule "no real data in
 
 Capture needs Node and the `playwright` npm package. Install once with `npm install` in this plugin's `scripts/` directory; Playwright reuses any chromium already in the local browser cache, so this is the npm package, not a fresh browser download. The capture depends on Node and Playwright, not on any other plugin.
 
+## First-run dependency check
+
+Before running the capture script, check whether Playwright is installed:
+
+    test -d "<this plugin>/scripts/node_modules"
+
+If `node_modules` is **absent**, stop and present the exact command to install it:
+
+    (cd "<this plugin>/scripts" && npm install)
+
+Then offer the runner two choices, and do not proceed until they pick:
+
+1. Install now (run the command above), then continue with screenshots.
+2. Proceed **image-less**: skip the capture stage entirely and produce the doc without screenshots.
+
+This check runs only when a capture stage is in scope — that is, `user-guide` mode with a non-empty capture plan. It never runs in `maintainer` or `agents-md` mode, which produce no capture plan.
+
 ## The capture spec
 
 The agent describes the capture declaratively in a JSON spec, rather than writing browser code. The script executes it.
