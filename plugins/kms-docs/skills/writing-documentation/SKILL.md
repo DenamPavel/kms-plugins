@@ -5,7 +5,7 @@ description: Use when writing or revising product or tool documentation - user m
 
 # Writing Documentation
 
-A self-contained rulebook for writing documentation that serves both a person and a machine. It restates the doc-relevant prose rules inline so it stands on its own. For fuller prose-voice enforcement, pair it with the `kms-human-voice` skill.
+A self-contained rulebook for writing documentation that serves both a person and a machine. It restates the doc-relevant prose rules inline so it stands on its own. For the full prose-voice rules and the machine-writing tells checklist, read the bundled `prose-voice-rules` skill.
 
 Scope: how to write docs that describe a product or tool to its users. Not for design docs, internal architecture notes, or commit messages.
 

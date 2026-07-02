@@ -51,7 +51,7 @@ Not started. Per the design doc's phase scope:
 - **Phase 7** — `/document-project` multi-doc orchestration (run-id-keyed scratch lifecycle, set-gate corrections overriding investigation-derived facts, concurrent-run isolation).
 - **Phase 8** — durable hand-labeled fixtures, the formal standalone acceptance test, the bundled cross-plugin static-check script, and release (version bump + CHANGELOG; plugin is still at 2.1.0).
 
-Two housekeeping items surfaced during 1–5 review, deferred here: (1) `writing-documentation/SKILL.md:8` still points to the external `kms-human-voice` skill, now redundant with the bundled `prose-voice-rules` fragment; (2) the Phase 8 static-check script must exclude the standalone-posture declaration line in `doc-internals-investigator.md:79` (a benign grep false positive).
+One housekeeping item remains for Phase 8: the static-check script must exclude the standalone-posture declaration line in `doc-internals-investigator.md:79` (a benign grep false positive). (The other item — `writing-documentation/SKILL.md:8` pointing to the external `kms-human-voice` skill — was fixed on 2026-07-02; it now points to the bundled `prose-voice-rules` skill, matching line 59 of the same file.)
 
 To start 6–8: copy the design doc, `/clear`, then `/ed3d-plan-and-execute:start-implementation-plan @docs/design-plans/2026-07-01-docsuite.md` scoped to Phases 6–8.
 
