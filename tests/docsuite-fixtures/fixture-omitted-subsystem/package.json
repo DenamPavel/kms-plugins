@@ -1,0 +1,7 @@
+{
+  "name": "fixture-omitted-subsystem",
+  "version": "1.0.0",
+  "description": "Durable test fixture: app with intentionally undocumented subsystem for internals critic testing.",
+  "main": "src/index.js",
+  "type": "module"
+}

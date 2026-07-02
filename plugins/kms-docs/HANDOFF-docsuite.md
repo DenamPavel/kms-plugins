@@ -2,7 +2,7 @@
 
 Last updated: 2026-07-01
 
-**Status: design FINALIZED and feature Phases 1–5 IMPLEMENTED (2026-07-01). The implementation plan (`docs/implementation-plans/2026-07-01-docsuite/`) was created, executed, and merged to `master`. Remaining: feature Phases 6–8 (survey, `/document-project` multi-doc orchestration, release) as a separate later plan. This file is retained for its design-decision and review history; the original "NEXT SESSION" design-finalization steps below are all done. A durable manual-test fixture lives at `~/Documents/GitHub/docsuite-testbed/` and the human test plan at `docs/test-plans/2026-07-01-docsuite.md`.**
+**Status: design FINALIZED and feature Phases 1–8 IMPLEMENTED (2026-07-02). The implementation plan (`docs/implementation-plans/2026-07-01-docsuite/`) was created and executed (Phases 1–5 merged to `master` 2026-07-01). Feature Phases 6–8 (survey, `/document-project` multi-doc orchestration, release, standalone integrity check) implemented in a separate branch and merged 2026-07-02. This file is retained for its design-decision and review history; the original "NEXT SESSION" design-finalization steps are all done. A durable manual-test fixture lives at `~/Documents/GitHub/docsuite-testbed/` and the human test plan at `docs/test-plans/2026-07-01-docsuite.md`. Phase 8 durable fixtures live at repo-level `tests/docsuite-fixtures/`.**
 
 ## What this is
 
@@ -24,7 +24,7 @@ Running `ed3d-plan-and-execute:starting-a-design-plan`. Completed: Phase 1 (cont
 - **Mental model for the doc dependencies:** the internals *investigation* is the unit `AGENTS.md` depends on; the maintainer *doc* is an optional second consumer (Option C). One investigation behavior, no "shallow mode."
 - **`AGENTS.md`:** distilled from internals grounding + extracted facts; signal-density enforced by machine-checkable disqualifiers (no line derivable from `cat package.json`; no advice true of every repo); `[TODO]` placeholders; single result gate; optional `CLAUDE.md` bridge with **syntax to be verified** (`@path` form, not `@import`).
 - **Shared prose/voice fragment:** one in-plugin file referenced by both `writing-documentation` and `writing-internals` (no duplication; stays standalone).
-- **Grounding artifact contract:** `<repo>/docs/.kms-run/internals-grounding.md`, gitignored, run-scoped, pinned schema incl. ✅/⚠️/🚫 boundary block; discarded at run end. Durable link is each doc's page-to-source map.
+- **Grounding artifact contract:** created outside the target repo via `mktemp -d` as `grounding.json`, run-scoped with run-id keying, pinned schema incl. ✅/⚠️/🚫 boundary block and inverted leak list; discarded at run end. Durable link is each doc's page-to-source map.
 - **Ledger:** `<repo>/docs/.docsuite-ledger.md`, per-doc status, read-on-entry resume (skip `done`), failure blocks dependent docs.
 - **Ask, don't guess:** safe-capture is an explicit question the surveyor asks; `capture.mjs` code-enforced assertion is the backstop.
 - **Standalone verified:** no ed3d / no required `kms-human-voice` / no general-purpose agent in the current plugin; `node_modules` gitignored in the plugin's `scripts/.gitignore` (confirmed). The gitlab export being `node_modules`-free is a release-time check, not yet verified, so mode-aware first-run `npm install` detection must be confirmed against the synced export.
@@ -44,16 +44,14 @@ Running `ed3d-plan-and-execute:starting-a-design-plan`. Completed: Phase 1 (cont
 
 The original design-finalization steps (Sonnet 5 adversarial review, integrate findings, AC approval, Summary + Glossary, commit the design doc, Phase 6 implementation-plan handoff) are all complete. Beyond them, the implementation plan for feature Phases 1–5 was written to `docs/implementation-plans/2026-07-01-docsuite/`, executed task-by-task with per-phase code review, and merged to `master` on 2026-07-01. Verification: subagent RED-GREEN across the rulebooks/agents, an automated node-smoke-test for `agents-md-filter.mjs`, and an empirical `@AGENTS.md`-import check against the installed Claude Code (2.1.197). Phase 1 (mode dispatch + refusal) re-run clean; the rest of the human test plan is at `docs/test-plans/2026-07-01-docsuite.md`.
 
-## Remaining — feature Phases 6–8 (separate later plan)
+## Completed — feature Phases 6–8 (2026-07-02)
 
-Not started. Per the design doc's phase scope:
-- **Phase 6** — the app survey / backlog triage flow.
-- **Phase 7** — `/document-project` multi-doc orchestration (run-id-keyed scratch lifecycle, set-gate corrections overriding investigation-derived facts, concurrent-run isolation).
-- **Phase 8** — durable hand-labeled fixtures, the formal standalone acceptance test, the bundled cross-plugin static-check script, and release (version bump + CHANGELOG; plugin is still at 2.1.0).
+Per the design doc's phase scope:
+- **Phase 6** — the app survey / backlog triage flow: `doc-surveyor` agent implemented.
+- **Phase 7** — `/document-project` multi-doc orchestration: `documenting-a-project` skill and `/document-project` command implemented (run-id-keyed scratch lifecycle, set-gate corrections, concurrent-run isolation, per-project ledger).
+- **Phase 8** — durable hand-labeled fixtures (repo-level `tests/docsuite-fixtures/`), formal standalone acceptance tests, bundled cross-plugin static-check script (`scripts/standalone-check.sh`), and release (version bump to 2.2.0 + marketplace 1.9.0 + CHANGELOG).
 
-One housekeeping item remains for Phase 8: the static-check script must exclude the standalone-posture declaration line in `doc-internals-investigator.md:79` (a benign grep false positive). (The other item — `writing-documentation/SKILL.md:8` pointing to the external `kms-human-voice` skill — was fixed on 2026-07-02; it now points to the bundled `prose-voice-rules` skill, matching line 59 of the same file.)
-
-To start 6–8: copy the design doc, `/clear`, then `/ed3d-plan-and-execute:start-implementation-plan @docs/design-plans/2026-07-01-docsuite.md` scoped to Phases 6–8.
+Static-check housekeeping: the `scripts/standalone-check.sh` script handles standalone-posture declaration exclusions via its `ALLOW` pattern (covering `doc-internals-investigator.md:79`, `documentation-pipeline/SKILL.md:26`, and the Phase 6/7 declaration lines), so no hardcoded line exclusions needed.
 
 ## Notes
 

@@ -1,0 +1,61 @@
+{
+  "whatItIs": "A simple application that manages data storage, generates reports, and caches results. The system consists of three interdependent subsystems: a data store for persistent state, a reporting engine that analyzes stored data, and a cache manager that optimizes frequent queries. Maintained by a small platform team; this application is the entry point for data workflows.",
+  "machineryMap": [
+    {
+      "name": "DataStore",
+      "responsibility": "Manages persistent data storage with fetch and save operations.",
+      "sourcePaths": ["src/data-store.js"],
+      "dataFlowIn": ["ReportGenerator", "CacheManager"],
+      "dataFlowOut": ["ReportGenerator", "CacheManager"]
+    },
+    {
+      "name": "ReportGenerator",
+      "responsibility": "Generates reports from stored data, depends on DataStore for data retrieval.",
+      "sourcePaths": ["src/reporting.js"],
+      "dataFlowIn": ["DataStore"],
+      "dataFlowOut": ["application"]
+    },
+    {
+      "name": "CacheManager",
+      "responsibility": "Caches frequently accessed data with TTL-based invalidation to reduce latency.",
+      "sourcePaths": ["src/cache.js"],
+      "dataFlowIn": ["DataStore"],
+      "dataFlowOut": ["application"]
+    }
+  ],
+  "invariants": [
+    {
+      "statement": "All cached values respect their TTL expiration time.",
+      "sourcePaths": ["src/cache.js#18-26"]
+    },
+    {
+      "statement": "Data modifications through save() are immediately visible to fetch().",
+      "sourcePaths": ["src/data-store.js#11-13"]
+    }
+  ],
+  "whyDecisions": [
+    {
+      "decision": "CacheManager uses a Map-based in-memory store rather than external cache (Redis, Memcached).",
+      "rejectedAlternatives": "External caches would add deployment complexity; in-memory is sufficient for this application's scale.",
+      "sourceOrEvidence": "src/cache.js#6-8; pragmatic choice for fixture scope"
+    }
+  ],
+  "facts": {
+    "build": [],
+    "test": [],
+    "run": []
+  },
+  "invertedLeakList": [],
+  "agentBoundaryBlock": {
+    "always": [
+      "Read source files",
+      "Reference module and component names",
+      "Cite source paths"
+    ],
+    "askFirst": [],
+    "never": [
+      "Modify source files"
+    ]
+  },
+  "schemaVersion": "1.0.0"
+}

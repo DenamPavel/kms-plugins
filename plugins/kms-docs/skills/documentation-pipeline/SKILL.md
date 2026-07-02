@@ -18,8 +18,9 @@ Invoked via `/write-doc`.
 
 - The target: which page, for which product, and where it should land.
 - The source location (repo path) so agents can ground against it.
+- **Execution intent (optional):** `write` (author fresh) or `audit` (revise the existing page). Defaults to inference: if the target page already exists, treat as `audit`; if absent, treat as `write`. When a caller (the project orchestrator) supplies intent explicitly, that value overrides the inference.
 
-If either is missing, ask before starting.
+If the target and source are missing, ask before starting.
 
 ## The agents
 
@@ -85,7 +86,11 @@ If a chosen option needs setup the pipeline cannot do itself (seeding a dataset,
 
 **In `agents-md` mode:** GATE 1 presents the target, the investigation's inverted leak list, and the boundary/coverage scope (the ✅/⚠️/🚫 `agentBoundaryBlock` plus the `machineryMap` coverage with source paths). This is analogous to the maintainer branch. No capture plan or safe-capture plan (those are user-guide-only). Get approval or corrections before distillation. The `agents-md`-alone path runs a **full** internals investigation (not a shallow variant), holds this GATE 1, then distills via `doc-agents-md`, then the result gate (defined below). Build/test/run commands come from the investigation's `facts` extraction; no surveyor is involved.
 
+**GATE 1 scope approval (Phase 7 vs. standalone):** Under `/document-project` (Phase 7), the orchestrator suppresses this GATE 1 because the set gate already approved scope; agents-md then holds only the result gate. In a standalone `/write-doc` agents-md run, this GATE 1 is held as described above.
+
 ### Stage 1.5 — Capture (only when the page needs screenshots)
+
+Before dispatching `doc-screenshooter`, run the first-run dependency check from the `capturing-screenshots` skill: verify that `<this plugin>/scripts/node_modules` is present. If it is absent, follow that skill's stop-and-offer procedure — present the install command `(cd "<this plugin>/scripts" && npm install)` and ask the runner to choose between installing now (then continuing with capture) or proceeding image-less (skipping this stage entirely).
 
 **This stage runs only in `user-guide` mode.** In `maintainer` and `agents-md` mode there is no capture plan and this stage is skipped entirely. Within `user-guide` mode, also skip when the approved capture plan is empty or the product cannot be run in a safe-capture mode.
 
@@ -101,7 +106,11 @@ The orchestrator owns standing up the running instance in safe mode; that setup 
 
 ### Stage 2 — Draft
 
-Dispatch `doc-writer` with **the mode's scope rulebook**, the approved ground truth, and the capture manifest. It writes the draft to a working path, embedding the approved screenshots where they earn their place, with alt text and captions per the rulebook.
+Branch on the execution intent:
+
+**If intent is `write`:** Dispatch `doc-writer` with **the mode's scope rulebook**, the approved ground truth, and the capture manifest. It writes the draft from scratch to a working path, embedding the approved screenshots where they earn their place, with alt text and captions per the rulebook.
+
+**If intent is `audit`:** Dispatch `doc-reviser` as the drafting step, without `doc-writer`. Pass the **existing target page** as the base, **the mode's scope rulebook**, the approved ground truth, and the capture manifest. Treat this as **revision of the existing page** — the reviser re-grounds against it and rewrites for accuracy and coverage, updating the page-to-source map rather than authoring from scratch. The output of this stage is a revised draft that flows into the normal review pipeline (Stage 3). This Stage 2 reviser invocation produces the revised drafting base, distinct from the Stage 4 revise pass that applies the Stage 3 review findings.
 
 **Orchestrator instruction to thread into the dispatch:**
 - **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."
@@ -129,7 +138,7 @@ Collect all findings. Deduplicate overlapping ones before revision.
 
 ### Stage 4 — Revise
 
-Dispatch `doc-reviser` with the draft and all findings. It applies **the mode's scope rulebook**, rewrites from intent, rejects wrong findings with reasons, closes coverage gaps, and writes the revised page.
+Dispatch `doc-reviser` with the draft and all findings from Stage 3. It applies **the mode's scope rulebook**, rewrites from intent, rejects wrong findings with reasons, closes coverage gaps, and writes the revised page.
 
 **Orchestrator instruction to thread into the dispatch:**
 - **(a) Resolved scope-rulebook path:** Write into the task prompt: "Your dispatched scope rulebook is `<mode-scope-rulebook>` (the mode's rulebook). You can load it at path `<plugin>/skills/<rulebook-dir>/SKILL.md` (e.g., `plugins/kms-docs/skills/writing-documentation/SKILL.md` for user-guide mode)."

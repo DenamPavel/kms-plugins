@@ -44,7 +44,7 @@ As of the docsuite implementation (feature Phases 1–5, merged to `master` 2026
 - **`maintainer`** — a machinery/architecture doc. Grounds via `doc-internals-investigator` (schema-pinned grounding artifact + inverted leak list), writer/editor/reviser apply the `writing-internals` scope, no capture stage. GATE 1 → draft → review → revise → GATE 2.
 - **`agents-md`** — a distilled `AGENTS.md`. Full internals investigation, no writer/editor/reviser and no coverage critic; `doc-agents-md` distills, a deterministic manifest-dedup filter runs, and a single result gate precedes writing. Optional `@AGENTS.md` `CLAUDE.md` bridge offered.
 
-This ledger tracks `user-guide` runs against real apps. Feature Phases 6–8 (survey, `/document-project` multi-doc orchestration, release) are a separate later plan.
+This ledger tracks `user-guide` runs against real apps. Feature Phases 6–8 (survey, `/document-project` multi-doc orchestration, release) shipped 2026-07-02; kms-docs is now at version 2.2.0.
 
 ## How to run
 
