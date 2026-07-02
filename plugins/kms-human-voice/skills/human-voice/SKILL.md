@@ -1,12 +1,12 @@
 ---
 name: human-voice
-description: Use when writing any prose, documentation, client-facing text, or commit messages - a self-contained set of anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, terminology preferences, intensity modulation, structural prose tells, and direct communication style
+description: "Use when writing any prose, documentation, client-facing text, or commit messages - a self-contained set of anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, terminology preferences, intensity modulation, structural prose tells, and direct communication style"
 user-invocable: false
 ---
 
 # Human Voice
 
-A self-contained writing-voice skill: personal anti-AI prose rules from client feedback, plus intensity modulation and structural prose tells. It pairs with `writing-for-a-technical-audience` (ed3d-house-style) and does not depend on it. The prose rules that overlap with that skill are duplicated here on purpose, so this skill stays portable on its own. It does not duplicate ed3d's technical-documentation craft (code-example design, progressive disclosure, API-reference structure); reach for that skill when you need those.
+A self-contained writing-voice skill: personal anti-AI prose rules from client feedback, plus intensity modulation and structural prose tells. Everything it needs is in this file, with no dependency on any other skill.
 
 ## Rules
 
@@ -187,9 +187,9 @@ These are sentence-level constructions that read as machine-written. They are di
 
 When you act on any flag from this skill, rewrite the sentence or paragraph from its intended meaning rather than patch-editing in place. Start from what the sentence should say and write it fresh. Editing around a problem tends to extend the sentence and produce clause barf, which is how the structure got bad in the first place.
 
-## Shared prose rules (duplicated for portability)
+## Shared prose rules
 
-Rules 9 through 14 overlap with `writing-for-a-technical-audience`. They live here so this skill works without that one installed.
+Rules 9 through 14 are general-purpose prose rules that apply to all writing, not just voice.
 
 ### 9. AI phrase blacklist
 
@@ -255,15 +255,3 @@ Vague quantifiers and abstract substitutes read as filler. Name the concrete fig
 |-------|----------|
 | This approach offers significant benefits. | Latency dropped from 450ms to 120ms. |
 | The wider choices persist. | The persistent choices remain across restarts. |
-
-## Relationship to writing-for-a-technical-audience
-
-This skill is standalone; everything above is enforced here with no dependency on the ed3d skill. When `writing-for-a-technical-audience` is also installed, it adds technical-documentation craft this skill does not cover.
-
-| Concern | Covered by |
-|---------|-----------|
-| Em-dash limit, contrastive framing, internal codes, metis, direct communication | human-voice |
-| Intensity saturation review | human-voice (+ hook + agent) |
-| Structural prose tells, rewrite-don't-patch | human-voice |
-| AI phrase blacklist, throat-clearing, hedging, transition words, reason-not-mechanism, be-specific | human-voice (duplicated for portability) |
-| Code-example design, progressive disclosure, API-reference structure | writing-for-a-technical-audience only |

@@ -1,6 +1,6 @@
 ---
 name: writing-internals
-description: Use when writing or revising a maintainer or architecture document about the machinery of a project: data flow, module boundaries, invariants, why-decisions. Covers machinery-is-the-subject scope, an inverted leak model (only secrets/tokens/real-data are sensitive), the shared machine-writing tells checklist, and the review gate.
+description: "Use when writing or revising a maintainer or architecture document about the machinery of a project: data flow, module boundaries, invariants, why-decisions. Covers machinery-is-the-subject scope, an inverted leak model (only secrets/tokens/real-data are sensitive), the shared machine-writing tells checklist, and the review gate."
 ---
 
 # Writing Internals
