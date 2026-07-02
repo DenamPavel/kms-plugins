@@ -1,5 +1,18 @@
 # Changelog
 
+## kms-plugins 1.9.0
+
+kms-docs 2.2.0 — docsuite project documentation pipeline (Phases 6–8).
+
+**New:**
+- `/document-project` command and `documenting-a-project` skill: survey a repo, approve the doc set at one set gate, then run the per-doc engine for the user guide, maintainer doc, and `AGENTS.md`, with a committed per-project ledger, resume, run-scoped grounding-artifact isolation, and a concurrent-run lock.
+- `doc-surveyor` agent: classifies a repo, inventories existing docs (write-fresh vs audit-existing), proposes the doc set, extracts a set-gate facts bundle, and asks the safe-capture questions.
+- Bundled `scripts/standalone-check.sh`: greps the invoked pieces to prove no external plugin/skill/agent is invoked.
+- Mode-aware first-run `npm install` detection on the capture path (fires only for `user-guide` screenshots).
+
+**Changed:**
+- The per-doc engine now accepts an explicit `write`/`audit` execution intent (defaulting to the prior infer-from-page-existence behavior, so `/write-doc` is unchanged).
+
 ## kms-plugins 1.8.0
 
 **Removed:**
