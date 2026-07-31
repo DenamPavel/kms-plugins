@@ -79,14 +79,24 @@ if (!A.rawOutputs) {
   return { error: 'missing rawOutputs', converged: false }
 }
 
+// agent() returns null when a subagent dies on a terminal API error after retries.
+// Every call below is guarded: a dead agent must never be mistaken for a clean result,
+// because an empty issue list computes to converged=true and reports a silent pass.
+
 phase('Summarize')
 let summary = await agent(summarizePrompt(A.rawOutputs, A.question), {
   agentType: 'panel-audit:panel-summarizer', model: 'opus', phase: 'Summarize', label: 'summarize', schema: SUMMARY_SCHEMA,
 })
 
+if (!summary) {
+  log('panel-audit-loop: the summarizer returned no result. Nothing to audit; aborting without a summary.')
+  return { error: 'summarizer returned no result', summary: null, auditTrail: [], rounds: 0, converged: false, humanMustAdjudicate: true }
+}
+
 const auditTrail = []
 let round = 0
 let verdict = null
+let auditFailed = null
 
 while (round < ROUND_CAP) {
   round++
@@ -94,6 +104,22 @@ while (round < ROUND_CAP) {
   verdict = await agent(auditPrompt(summary, A.sourceHints), {
     agentType: 'panel-audit:panel-auditor', model: 'fable', phase: 'Audit', label: `audit r${round}`, schema: VERDICT_SCHEMA,
   })
+
+  // One retry: a connection dropped mid-response is transient and worth a second attempt.
+  if (!verdict) {
+    log(`Round ${round}: auditor returned no result. Retrying once.`)
+    verdict = await agent(auditPrompt(summary, A.sourceHints), {
+      agentType: 'panel-audit:panel-auditor', model: 'fable', phase: 'Audit', label: `audit r${round} retry`, schema: VERDICT_SCHEMA,
+    })
+  }
+
+  if (!verdict) {
+    auditFailed = `Round ${round}: auditor returned no result twice. This round did not audit, so the summary is unverified.`
+    log(auditFailed)
+    auditTrail.push({ round, overall: 'AUDIT_FAILED', issues: [], note: auditFailed })
+    break
+  }
+
   auditTrail.push({ round, overall: verdict.overall, issues: verdict.issues })
 
   const unresolved = (verdict.issues || []).filter(
@@ -105,9 +131,16 @@ while (round < ROUND_CAP) {
   if (round >= ROUND_CAP) break
 
   phase('Revise')
-  summary = await agent(revisePrompt(A.rawOutputs, summary, verdict.issues, A.question), {
+  const revised = await agent(revisePrompt(A.rawOutputs, summary, verdict.issues, A.question), {
     agentType: 'panel-audit:panel-summarizer', model: 'opus', phase: 'Revise', label: `revise r${round}`, schema: SUMMARY_SCHEMA,
   })
+
+  if (!revised) {
+    auditFailed = `Round ${round}: the summarizer returned no result on revision. The prior summary stands with round ${round}'s issues unaddressed.`
+    log(auditFailed)
+    break
+  }
+  summary = revised
 }
 
 const finalIssues = (verdict && verdict.issues) || []
@@ -116,17 +149,19 @@ const unverifiable = finalIssues.filter((i) => i.verdict === 'unverifiable')
 const unresolvedAtCap = finalIssues.filter(
   (i) => (i.verdict === 'wrong' || i.verdict === 'overstated') && i.status !== 'contested'
 )
-const converged = unresolvedAtCap.length === 0
+// A failed agent leaves finalIssues empty, which would otherwise read as convergence.
+const converged = !auditFailed && unresolvedAtCap.length === 0
 
-log(`Done after ${round} round(s). converged=${converged}, contested=${contested.length}, unverifiable=${unverifiable.length}, unresolvedAtCap=${unresolvedAtCap.length}.`)
+log(`Done after ${round} round(s). converged=${converged}, contested=${contested.length}, unverifiable=${unverifiable.length}, unresolvedAtCap=${unresolvedAtCap.length}.${auditFailed ? ' INCOMPLETE: ' + auditFailed : ''}`)
 
 return {
   summary,
   auditTrail,
   rounds: round,
   converged,
+  incomplete: auditFailed,
   contested,
   unverifiable,
   unresolvedAtCap,
-  humanMustAdjudicate: contested.length + unverifiable.length + unresolvedAtCap.length > 0,
+  humanMustAdjudicate: Boolean(auditFailed) || contested.length + unverifiable.length + unresolvedAtCap.length > 0,
 }

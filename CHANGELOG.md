@@ -10,6 +10,7 @@ Adds two plugins that existed locally but had never been pushed, and fixes a def
 
 **Fixed:**
 - `panel-audit` dispatched its agents by bare name in both `workflows/panel-audit-loop.js` (lines 84, 95, 109) and `hooks/audit-summary.sh` (line 77). Plugin agents register namespaced, so the loop aborted at its first `agent()` call with "agent type not found" and ran zero rounds, and the hook backstop failed by the same cause. Both are now qualified as `panel-audit:panel-summarizer` and `panel-audit:panel-auditor`. Verified by an actual dispatch rather than a control-flow dry run, which is what let the defect ship in 0.1.0.
+- `panel-audit`'s loop had no null guard on `agent()`, which returns null when a subagent dies on a terminal API error. A dropped auditor connection crashed the run, and the null then made `converged` compute to `true`, so a crashed audit would have been reported as a clean pass. The auditor now retries once, a second failure records an `AUDIT_FAILED` round, and `converged` is false whenever any agent failed.
 
 **Note:** `kms-docs` and `kms-human-voice` are unchanged apart from one comment in `standalone-check.sh` naming `kms-mcp-patterns` among the siblings its guard rejects. Its `FORBIDDEN` pattern matches `kms-[a-z]`, so `panel-audit` is a sibling the guard does not currently catch. Left as-is rather than widened, since that is a behavior change to the check.
 
