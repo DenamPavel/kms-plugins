@@ -27,7 +27,7 @@
         },
         {
             "name": "panel-audit",
-            "description": "Enforced summarize-audit loop for multi-model councils/panels on non-code work: a summarizer collapses raw panel outputs into source-attributed claims, a re-deriving adversarial auditor re-checks each against primary sources, and they loop until convergence or a 3-round cap. Ships the working-with-panels skill, panel-audit-loop workflow, panel-summarizer/panel-auditor agents, and an audit-summary hook backstop",
+            "description": "Enforced summarize-audit loop for multi-model councils/panels on non-code work: a summarizer collapses raw panel outputs into source-attributed claims, a re-deriving adversarial auditor re-checks each against primary sources, and they loop until convergence or the round cap. The prose summary is audited alongside the claims, and later rounds audit only what changed. Ships the working-with-panels skill, panel-audit-loop workflow, panel-summarizer/panel-auditor agents, and an audit-summary hook backstop",
             "version": "0.1.1",
             "source": "./plugins/panel-audit"
         }

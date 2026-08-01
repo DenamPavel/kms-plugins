@@ -1,6 +1,6 @@
 export const meta = {
   name: 'panel-audit-loop',
-  description: 'Summarize raw council/panel outputs into a source-attributed summary, then loop a re-deriving adversarial auditor against it until it converges or hits a 3-round cap. Returns the summary plus a full audit trail; contested, unverifiable, and unresolved items surface for human adjudication.',
+  description: 'Summarize raw council/panel outputs into a source-attributed summary, then loop a re-deriving adversarial auditor against it until it converges or hits the round cap (3 by default, set with args.roundCap). Round 1 audits every claim and the prose; later rounds audit only what was flagged or rewritten. Returns the summary plus a full audit trail; contested, unverifiable, unresolved, and prose findings surface for human adjudication.',
   phases: [
     { title: 'Summarize', detail: 'collapse raw council outputs into attributed claims' },
     { title: 'Audit', detail: 're-derive each claim against primary sources' },
@@ -8,9 +8,11 @@ export const meta = {
   ],
 }
 
-// args: { rawOutputs: string (required), question?: string, sourceHints?: string }
+// args: { rawOutputs: string (required), question?: string, sourceHints?: string, roundCap?: number }
 
-const ROUND_CAP = 3
+// The prose field carries no claim id, so it was previously unauditable: the verdict schema
+// requires an integer claimId. Reserve 0 for it. Claim ids start at 1, so 0 cannot collide.
+const PROSE_ID = 0
 
 const SUMMARY_SCHEMA = {
   type: 'object',
@@ -46,7 +48,7 @@ const VERDICT_SCHEMA = {
         type: 'object',
         additionalProperties: false,
         properties: {
-          claimId: { type: 'integer' },
+          claimId: { type: 'integer', description: 'The claim id this finding is about, or 0 for the summary\'s "prose" field.' },
           verdict: { type: 'string', enum: ['wrong', 'overstated', 'unverifiable', 'clean'] },
           evidence: { type: 'string', description: 'What the primary source supports, and how you re-derived it.' },
           corrected: { type: 'string', description: 'The claim as the source supports it, or empty.' },
@@ -64,15 +66,25 @@ function summarizePrompt(raw, question) {
 }
 
 function revisePrompt(raw, prior, issues, question) {
-  return `Mode 2: revision. Revise the summary using the auditor's findings.\n\n${question ? `Council question: ${question}\n\n` : ''}RAW COUNCIL OUTPUTS (ground truth for what the seats said):\n${raw}\n\nPRIOR SUMMARY:\n${JSON.stringify(prior, null, 2)}\n\nAUDITOR FINDINGS (each references a claimId):\n${JSON.stringify(issues, null, 2)}\n\nFor each finding: FIX the claim to match the auditor's evidence, or CONTEST it (keep the claim, set "contested" to a one-line source-grounded reason). Keep every claim's id stable.`
+  return `Mode 2: revision. Revise the summary using the auditor's findings.\n\n${question ? `Council question: ${question}\n\n` : ''}RAW COUNCIL OUTPUTS (ground truth for what the seats said):\n${raw}\n\nPRIOR SUMMARY:\n${JSON.stringify(prior, null, 2)}\n\nAUDITOR FINDINGS (each references a claimId; claimId 0 means the finding is about the "prose" field, not a claim):\n${JSON.stringify(issues, null, 2)}\n\nFor each finding: FIX the claim to match the auditor's evidence, or CONTEST it (keep the claim, set "contested" to a one-line source-grounded reason). Keep every claim's id stable. A finding on claimId 0 means rewriting the affected sentence of "prose"; you cannot contest a prose finding by setting a field, so either fix the prose or say why in the prose itself.\n\nDo not rewrite a claim the auditor did not flag. Leave every other claim byte-identical, because the next round audits only what changed and what was flagged, and a gratuitous edit costs a re-derivation. Do not overcorrect either: fix exactly what the evidence supports and keep the part of the claim that was accurate.`
 }
 
-function auditPrompt(summary, hints) {
-  return `Audit this council summary. Re-derive each claim against primary sources; do not proofread.\n\nSUMMARY TO AUDIT:\n${JSON.stringify(summary, null, 2)}\n\n${hints ? `SOURCE HINTS (where to look): ${hints}\n\n` : ''}Reference each finding by the claim's id. Handle any claim whose "contested" field is set per your mandate. Follow re-derive-or-flag: anything you cannot reach a source for is "unverifiable", never "clean".`
+function auditPrompt(summary, hints, scopeIds) {
+  const scoped = Array.isArray(scopeIds)
+  const scopeNote = scoped
+    ? `\n\nSCOPE FOR THIS ROUND: audit ONLY these ids: ${scopeIds.join(', ')}. Every other claim was re-derived clean in an earlier round and must not be re-audited; return no issue for it, not even a "clean" one. The scoped ids are the ones a previous round flagged plus the ones the summarizer rewrote in response. Exception: if a scoped claim's new wording contradicts an unscoped claim, flag the scoped one and name the contradiction in your evidence.`
+    : ''
+  return `Audit this council summary. Re-derive each claim against primary sources; do not proofread.\n\nSUMMARY TO AUDIT:\n${JSON.stringify(summary, null, 2)}\n\n${hints ? `SOURCE HINTS (where to look): ${hints}\n\n` : ''}Reference each finding by the claim's id.${scopeNote}\n\nTHE PROSE FIELD IS IN SCOPE AND IS REPORTED AS claimId 0. The "prose" field is what a human actually reads, and it is where a compression error does the most damage: a generalisation the claims do not support, a count that contradicts a claim, an attribution to more sources than the claims list, or a hedge that has been laundered into a confident statement. Audit it against the claims array and against the primary sources, and report any finding on it as claimId 0. Do not skip it because it has no id of its own.\n\nHandle any claim whose "contested" field is set per your mandate. Follow re-derive-or-flag: anything you cannot reach a source for is "unverifiable", never "clean".`
 }
 
 // args may arrive as an object or as a JSON-encoded string depending on how it was passed; normalize.
 const A = (typeof args === 'string') ? JSON.parse(args) : (args || {})
+
+// Round 1 audits every claim. Later rounds audit only what the previous round flagged plus any
+// claim the revision rewrote, because re-deriving an already-clean claim three times is where
+// this loop spent most of its tokens. A cap of 1 audits without ever revising, so the corrected
+// claims never get produced; 3 is the default for that reason.
+const ROUND_CAP = Math.max(1, Math.min(5, Number(A.roundCap) || 3))
 
 if (!A.rawOutputs) {
   log('panel-audit-loop: missing args.rawOutputs (the raw council/panel outputs to summarize and audit).')
@@ -93,22 +105,41 @@ if (!summary) {
   return { error: 'summarizer returned no result', summary: null, auditTrail: [], rounds: 0, converged: false, humanMustAdjudicate: true }
 }
 
+// What the next round needs to look at: whatever this round flagged, plus whatever the
+// summarizer actually rewrote. A claim nobody touched and nobody flagged does not need a
+// third re-derivation. Prose is always included once anything changed, because a claim fix
+// leaves the prose still asserting the old version, and prose is what a human reads.
+function nextScope(prior, revised, issues) {
+  const ids = new Set((issues || []).map((i) => i.claimId))
+  const before = new Map((prior.claims || []).map((c) => [c.id, c.text]))
+  for (const c of revised.claims || []) {
+    if (!before.has(c.id) || before.get(c.id) !== c.text) ids.add(c.id)
+  }
+  ids.add(PROSE_ID)
+  return [...ids].sort((a, b) => a - b)
+}
+
 const auditTrail = []
+// Verdicts accumulate across rounds keyed by id, so narrowing a later round cannot silently
+// drop an unverifiable or contested item that an earlier round found outside the new scope.
+const merged = new Map()
 let round = 0
 let verdict = null
 let auditFailed = null
+let scopeIds = null // null means audit every claim; round 1 always does
 
 while (round < ROUND_CAP) {
   round++
   phase('Audit')
-  verdict = await agent(auditPrompt(summary, A.sourceHints), {
-    agentType: 'panel-audit:panel-auditor', model: 'fable', phase: 'Audit', label: `audit r${round}`, schema: VERDICT_SCHEMA,
+  const scopeLabel = scopeIds ? ` (${scopeIds.length} scoped)` : ''
+  verdict = await agent(auditPrompt(summary, A.sourceHints, scopeIds), {
+    agentType: 'panel-audit:panel-auditor', model: 'fable', phase: 'Audit', label: `audit r${round}${scopeLabel}`, schema: VERDICT_SCHEMA,
   })
 
   // One retry: a connection dropped mid-response is transient and worth a second attempt.
   if (!verdict) {
     log(`Round ${round}: auditor returned no result. Retrying once.`)
-    verdict = await agent(auditPrompt(summary, A.sourceHints), {
+    verdict = await agent(auditPrompt(summary, A.sourceHints, scopeIds), {
       agentType: 'panel-audit:panel-auditor', model: 'fable', phase: 'Audit', label: `audit r${round} retry`, schema: VERDICT_SCHEMA,
     })
   }
@@ -116,22 +147,26 @@ while (round < ROUND_CAP) {
   if (!verdict) {
     auditFailed = `Round ${round}: auditor returned no result twice. This round did not audit, so the summary is unverified.`
     log(auditFailed)
-    auditTrail.push({ round, overall: 'AUDIT_FAILED', issues: [], note: auditFailed })
+    auditTrail.push({ round, overall: 'AUDIT_FAILED', scope: scopeIds || 'all', issues: [], note: auditFailed })
     break
   }
 
-  auditTrail.push({ round, overall: verdict.overall, issues: verdict.issues })
+  auditTrail.push({ round, overall: verdict.overall, scope: scopeIds || 'all', issues: verdict.issues })
+  for (const i of verdict.issues || []) merged.set(i.claimId, { ...i, round })
 
-  const unresolved = (verdict.issues || []).filter(
+  // Unresolved is computed across all rounds, not just this one, so a narrowed round cannot
+  // declare convergence while an earlier flagged claim is still open.
+  const unresolved = [...merged.values()].filter(
     (i) => (i.verdict === 'wrong' || i.verdict === 'overstated') && i.status !== 'contested'
   )
-  log(`Round ${round}: overall ${verdict.overall}, ${unresolved.length} unresolved issue(s).`)
+  log(`Round ${round}: overall ${verdict.overall}, ${unresolved.length} unresolved issue(s) outstanding.`)
 
   if (unresolved.length === 0) break
   if (round >= ROUND_CAP) break
 
   phase('Revise')
-  const revised = await agent(revisePrompt(A.rawOutputs, summary, verdict.issues, A.question), {
+  const prior = summary
+  const revised = await agent(revisePrompt(A.rawOutputs, prior, verdict.issues, A.question), {
     agentType: 'panel-audit:panel-summarizer', model: 'opus', phase: 'Revise', label: `revise r${round}`, schema: SUMMARY_SCHEMA,
   })
 
@@ -141,27 +176,35 @@ while (round < ROUND_CAP) {
     break
   }
   summary = revised
+  scopeIds = nextScope(prior, summary, verdict.issues)
 }
 
-const finalIssues = (verdict && verdict.issues) || []
+const finalIssues = [...merged.values()]
 const contested = finalIssues.filter((i) => i.status === 'contested')
 const unverifiable = finalIssues.filter((i) => i.verdict === 'unverifiable')
 const unresolvedAtCap = finalIssues.filter(
   (i) => (i.verdict === 'wrong' || i.verdict === 'overstated') && i.status !== 'contested'
 )
-// A failed agent leaves finalIssues empty, which would otherwise read as convergence.
+const proseFindings = finalIssues.filter((i) => i.claimId === PROSE_ID && i.verdict !== 'clean')
+// A failed agent leaves the merged map without this round's verdicts, which would otherwise
+// read as convergence.
 const converged = !auditFailed && unresolvedAtCap.length === 0
 
-log(`Done after ${round} round(s). converged=${converged}, contested=${contested.length}, unverifiable=${unverifiable.length}, unresolvedAtCap=${unresolvedAtCap.length}.${auditFailed ? ' INCOMPLETE: ' + auditFailed : ''}`)
+log(`Done after ${round} round(s). converged=${converged}, contested=${contested.length}, unverifiable=${unverifiable.length}, unresolvedAtCap=${unresolvedAtCap.length}, proseFindings=${proseFindings.length}.${auditFailed ? ' INCOMPLETE: ' + auditFailed : ''}`)
 
 return {
   summary,
   auditTrail,
   rounds: round,
+  roundCap: ROUND_CAP,
   converged,
   incomplete: auditFailed,
   contested,
   unverifiable,
   unresolvedAtCap,
+  // Findings against the prose field rather than a single claim. These matter out of proportion
+  // to their count: the prose is the part a human reads, and it is where a generalisation the
+  // claims do not support survives even when every claim is individually clean.
+  proseFindings,
   humanMustAdjudicate: Boolean(auditFailed) || contested.length + unverifiable.length + unresolvedAtCap.length > 0,
 }
