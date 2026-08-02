@@ -1,8 +1,8 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "kms-plugins",
-    "version": "1.0.0",
-    "description": "Claude Code plugins for writing: a documentation pipeline and a prose-voice rulebook",
+    "version": "1.1.0",
+    "description": "Claude Code plugins: a documentation pipeline, a prose-voice rulebook, an enforced council summarize-audit loop, and MCP server design patterns",
     "owner": {
         "name": "KMS"
     },
@@ -18,6 +18,18 @@
             "description": "Self-contained writing style enforcement: anti-AI phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, intensity modulation, structural prose tells, and direct communication",
             "version": "1.3.0",
             "source": "./plugins/kms-human-voice"
+        },
+        {
+            "name": "kms-mcp-patterns",
+            "description": "Design patterns for building MCP servers",
+            "version": "1.0.0",
+            "source": "./plugins/kms-mcp-patterns"
+        },
+        {
+            "name": "panel-audit",
+            "description": "Enforced summarize-audit loop for multi-model councils/panels on non-code work: a summarizer collapses raw panel outputs into source-attributed claims, a re-deriving adversarial auditor re-checks each against primary sources, and they loop until convergence or the round cap. The prose summary is audited alongside the claims, and later rounds audit only what changed. Ships the working-with-panels skill, panel-audit-loop workflow, panel-summarizer/panel-auditor agents, and an audit-summary hook backstop",
+            "version": "0.1.1",
+            "source": "./plugins/panel-audit"
         }
     ]
 }

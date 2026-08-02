@@ -10,7 +10,7 @@ ROOTS=("$PLUGIN_DIR/agents" "$PLUGIN_DIR/skills" "$PLUGIN_DIR/commands" "$PLUGIN
 
 # Forbidden: other ed3d plugins/agents, the generic-agent fallback, and ANY kms-* sibling.
 # kms-docs self-references are stripped before the re-test below, so only siblings
-# (kms-human-voice, any future kms-*) trip it.
+# (kms-human-voice, kms-mcp-patterns, any future kms-*) trip it.
 FORBIDDEN='ed3d-|general-purpose|kms-[a-z]'
 
 # Standalone-posture declaration sentences are ALLOWED to name the forbidden tokens (as things NOT invoked).
