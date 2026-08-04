@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3
+
+The round scoping shipped in 0.1.1 does not work. Observed on the 2026-08-04 admin-plan run: rounds 2 and 3 each re-derived all 24 claims instead of the handful flagged, because the summarizer rewrote every claim on revision and `nextScope` treats changed text as in-scope. That run cost 591,885 subagent tokens over 3 rounds to produce 4 catches, and roughly two thirds of the claim-audits were re-derivations of claims already rated clean. It is the same defect 0.1.1 tried to fix with prompt wording; the wording did not hold.
+
+**Fixed:**
+- **`pinUnflagged` enforces "do not rewrite what was not flagged" instead of asking for it.** After each revision the loop restores every unflagged claim to its prior text verbatim, keeping the summarizer's new text only for claims the auditor actually flagged. `nextScope`'s diff then reports only sanctioned edits, so a gratuitous rewrite cannot cost a round. A claim the revision dropped entirely is also restored, so the claim set cannot silently shrink. When drift is detected the loop logs how many claims it restored, which makes the failure visible instead of silent.
+
+**Why this matters beyond cost:** gratuitous rewrites manufacture findings. On the same run, round 2 flagged claim 21 `overstated` — a claim round 1 had rated clean and nobody had asked the summarizer to touch. The 0.1.1 changelog records the identical pattern on the first run ("round 2 overcorrected a fix and round 3 had to restore the accurate half"). Unflagged churn is not merely wasted tokens; it is a source of new errors that then need their own round.
+
 ## 0.1.2
 
 Cuts the loop's cost and stops running it where a `grep` is cheaper. Driven by the runs log, which had to be repaired first because four of its seven records were unreadable.

@@ -123,6 +123,28 @@ function nextScope(prior, revised, issues) {
   return [...ids].sort((a, b) => a - b)
 }
 
+// Enforce "do not rewrite what was not flagged" rather than asking for it. The revise prompt
+// has said so since 0.1.1 and the summarizer does not comply: observed 2026-08-04, round 2
+// re-derived all 24 claims because every claim's text had drifted, which is precisely the
+// re-derivation the scoping exists to avoid. It also manufactures work -- that run's round 2
+// flagged a claim round 1 had rated clean, a claim nobody had asked it to touch.
+//
+// So restore every unflagged claim to its prior text verbatim. nextScope's diff then reports
+// only genuine, sanctioned edits, and a gratuitous rewrite cannot cost a round. Claims the
+// auditor DID flag keep the summarizer's new text, which is the whole point of revising.
+// A claim the revision dropped entirely is also restored, so the set cannot silently shrink.
+function pinUnflagged(prior, revised, issues) {
+  const flagged = new Set((issues || []).map((i) => i.claimId))
+  const priorById = new Map((prior.claims || []).map((c) => [c.id, c]))
+  const kept = (revised.claims || []).map((c) =>
+    flagged.has(c.id) || !priorById.has(c.id) ? c : priorById.get(c.id)
+  )
+  const seen = new Set(kept.map((c) => c.id))
+  for (const c of prior.claims || []) if (!seen.has(c.id)) kept.push(c)
+  const restored = kept.length - (revised.claims || []).filter((c) => flagged.has(c.id)).length
+  return { ...revised, claims: kept.sort((a, b) => a.id - b.id), _restored: restored }
+}
+
 const auditTrail = []
 // Verdicts accumulate across rounds keyed by id, so narrowing a later round cannot silently
 // drop an unverifiable or contested item that an earlier round found outside the new scope.
@@ -179,7 +201,15 @@ while (round < ROUND_CAP) {
     log(auditFailed)
     break
   }
-  summary = revised
+  const pinned = pinUnflagged(prior, revised, verdict.issues)
+  const drifted = (revised.claims || []).filter(
+    (c) => !((verdict.issues || []).some((i) => i.claimId === c.id)) &&
+      (prior.claims || []).some((p) => p.id === c.id && p.text !== c.text)
+  ).length
+  if (drifted > 0) {
+    log(`Round ${round}: the summarizer rewrote ${drifted} unflagged claim(s); restored to prior text so they are not re-audited.`)
+  }
+  summary = pinned
   scopeIds = nextScope(prior, summary, verdict.issues)
 }
 
