@@ -1,7 +1,7 @@
 {
     "name": "panel-audit",
-    "version": "0.1.1",
-    "description": "Enforced summarize-audit loop for multi-model councils and review panels on non-code work. A summarizer collapses raw panel outputs into source-attributed claims; a re-deriving adversarial auditor (a different model) re-checks each against primary sources; they loop until convergence or the round cap, surfacing contested/unverifiable/unresolved/prose items for human adjudication. The summary prose is audited alongside the claims, and rounds after the first audit only what was flagged or rewritten. Ships the working-with-panels skill, the panel-audit-loop workflow, the panel-summarizer and panel-auditor agents, and a write-time audit-summary hook as a backstop.",
+    "version": "0.1.2",
+    "description": "Enforced summarize-audit loop for multi-model councils and review panels on non-code work. A summarizer collapses raw panel outputs into source-attributed claims; a re-deriving adversarial auditor (a different model) re-checks each against primary sources; they loop until convergence or a 2-round cap, surfacing contested/unverifiable/unresolved/prose items for human adjudication. The summary prose is audited alongside the claims, and rounds after the first audit only what was flagged or rewritten. Ships the working-with-panels skill, the panel-audit-loop workflow, the panel-summarizer and panel-auditor agents, and a write-time audit-summary hook as a backstop.",
     "author": {
         "name": "KMS"
     },

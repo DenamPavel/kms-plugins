@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.2
+
+Cuts the loop's cost and stops running it where a `grep` is cheaper. Driven by the runs log, which had to be repaired first because four of its seven records were unreadable.
+
+**Changed:**
+- **`roundCap` defaults to 2, was 3.** Of the three well-formed runs logged, both that reached round 3 still escalated open items to the human at the cap (`unresolvedAtCap` 1 and 2); only one of the three converged there. Round 3 mostly buys an Opus revise and a Fable audit before handing over the problem anyway. Three is still available by asking, and the skill says when to ask: a first audit returning many `wrong` verdicts rather than a few.
+- **The skill now tells you to pass `rawOutputs` as file paths, not inlined text.** `revisePrompt` embeds the full raw panel output in the summarizer's prompt again on every revision round. Four 15KB seat reports is ~20k tokens re-sent per round, on Opus, carrying nothing new. Paths make it a pointer block the summarizer resolves once with `Read`, and the reports survive on disk as the primary record section 4b already depends on. The workflow's arg comment says so too.
+
+**New:**
+- **Section 0: decide whether the loop is the right instrument.** The loop's premise is that re-deriving a claim is expensive. When every claim cites a `file:line` in a local repo that premise is false, and the chair should falsify the claims directly. Evidence: the 2026-07-31 people-as-login run caught two issues in two rounds and both were `grep`-findable (a count, "four queries not five", and a seat misattribution). Two of the three well-formed runs were fiction, where an agent genuinely is the cheapest way to re-derive against a 26k-word source — that is the case the loop is for. A chair pass is still an audit and still gets a runs-log record, now with `mode: "chair"`.
+
+**Fixed:**
+- **The runs log had no fixed schema, so it could not answer the question it exists for.** Records written 2026-07-22 omitted `question`, `issuesCaught` and `unresolvedAtCap`; later ones populated them. Four of seven records were therefore incomparable, and a reader could not distinguish an absent field from a zero. Section 5 now ships an exact `jq -cn` template with every field written every time, adds `mode` and `claimsAudited`, and says to log chair passes too — without which the log becomes a survey of only the runs that used the loop. `claimsAudited` is what makes a hit rate computable: the 2026-08-04 admin-plan run audited 24 claims in round 1 and flagged 3 (one `wrong`, two `overstated`, one of those the prose), which is a materially different tool from three catches out of four.
+
+**Not changed, and why:** the prose field keeps driving revision rounds. Prose churn looked like a plausible cause of the two non-converging runs, but `proseFindings` was 0 on every run before 2026-08-04, so the data does not support it. Left alone rather than fixed on a theory.
+
 ## 0.1.1
 
 Fixes unqualified agent names that made both the loop and its backstop non-functional. Found on the first live council run.

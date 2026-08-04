@@ -1,6 +1,6 @@
 export const meta = {
   name: 'panel-audit-loop',
-  description: 'Summarize raw council/panel outputs into a source-attributed summary, then loop a re-deriving adversarial auditor against it until it converges or hits the round cap (3 by default, set with args.roundCap). Round 1 audits every claim and the prose; later rounds audit only what was flagged or rewritten. Returns the summary plus a full audit trail; contested, unverifiable, unresolved, and prose findings surface for human adjudication.',
+  description: 'Summarize raw council/panel outputs into a source-attributed summary, then loop a re-deriving adversarial auditor against it until it converges or hits the round cap (2 by default, set with args.roundCap). Round 1 audits every claim and the prose; later rounds audit only what was flagged or rewritten. Returns the summary plus a full audit trail; contested, unverifiable, unresolved, and prose findings surface for human adjudication.',
   phases: [
     { title: 'Summarize', detail: 'collapse raw council outputs into attributed claims' },
     { title: 'Audit', detail: 're-derive each claim against primary sources' },
@@ -9,6 +9,8 @@ export const meta = {
 }
 
 // args: { rawOutputs: string (required), question?: string, sourceHints?: string, roundCap?: number }
+// rawOutputs is re-sent to the summarizer on EVERY revision round. Prefer passing absolute
+// file paths to the seat reports plus an instruction to Read them, not the inlined text.
 
 // The prose field carries no claim id, so it was previously unauditable: the verdict schema
 // requires an integer claimId. Reserve 0 for it. Claim ids start at 1, so 0 cannot collide.
@@ -83,8 +85,10 @@ const A = (typeof args === 'string') ? JSON.parse(args) : (args || {})
 // Round 1 audits every claim. Later rounds audit only what the previous round flagged plus any
 // claim the revision rewrote, because re-deriving an already-clean claim three times is where
 // this loop spent most of its tokens. A cap of 1 audits without ever revising, so the corrected
-// claims never get produced; 3 is the default for that reason.
-const ROUND_CAP = Math.max(1, Math.min(5, Number(A.roundCap) || 3))
+// claims never get produced; 2 is the default because it buys exactly one revision. Round 3 was
+// the default until 0.1.2: both logged runs that reached it still escalated open items at the
+// cap, so it mostly bought an Opus revise and a Fable audit before handing over the problem.
+const ROUND_CAP = Math.max(1, Math.min(5, Number(A.roundCap) || 2))
 
 if (!A.rawOutputs) {
   log('panel-audit-loop: missing args.rawOutputs (the raw council/panel outputs to summarize and audit).')
