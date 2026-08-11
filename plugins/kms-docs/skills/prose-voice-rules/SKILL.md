@@ -26,6 +26,7 @@ Machine-written prose has recognizable tells. Hunt these in every draft and in r
 | **Passive voice** | "The prompt is held," "is configured by" | Name the actor: "The product holds the prompt." |
 | **Unclear antecedent** | "Understanding it is key," "This lets you..." | Name the thing the pronoun stands for. |
 | **Structure-preview sentence** | "This page covers...," "Commands fall into three groups..." | Delete. The headings already say it. |
+| **Heading names the reading experience** | "What you need to know about permissions," "Two things that bite if you ignore them," "How to think about scopes" | Name the subject the section is about: "Permission scopes," "Two constraints on the join." If the heading only exists to introduce a list, drop it and let the list stand. |
 | **Reassurance/summary tail** | "...so you can queue follow-ups without losing your place" | Delete. It restates what the reader just read. |
 | **Repetition rhythm** | Anaphora and triples: "you write there, you reference there, you reach back there" | Collapse to one declarative sentence. |
 | **Over-packed list-sentence** | Many examples crammed in so the verb arrives late | Split into separate sentences or a list. |

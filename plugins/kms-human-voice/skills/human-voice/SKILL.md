@@ -6,7 +6,11 @@ user-invocable: false
 
 # Human Voice
 
-A self-contained writing-voice skill: personal anti-AI prose rules, plus intensity modulation and structural prose tells. Everything it needs is in this file, with no dependency on any other skill.
+A self-contained writing-voice skill: personal anti-AI prose rules from client feedback, plus intensity modulation and structural prose tells. Everything it needs is in this file, with no dependency on any other skill.
+
+**This is the default voice.** It is the fallback for prose of every kind, including fiction, essays, memos, and chat, whenever no other register has been chosen. Individual rules narrow their own scope where they say so; Rule 6 is the one that does.
+
+**One thing overrides it, and only for what it covers.** The `kms-docs` scope rulebooks govern product documentation and maintainer docs; `writing-documentation` in particular requires "you" to mean the reader and requires bold literal UI labels. Everywhere else, this skill governs alone.
 
 ## Rules
 
@@ -17,6 +21,8 @@ One em-dash per page maximum. Replace extras with commas, semicolons, or periods
 | Before | After |
 |--------|-------|
 | The data shows growth -- particularly in Q3 -- across all segments -- even underperformers. | The data shows growth, particularly in Q3, across all segments. Even underperformers improved. |
+
+A stricter rule exists and does not contradict this one; it covers narrower ground. Product documentation written under `kms-docs` allows none at all. The narrower rule wins for the documents it covers.
 
 ### 2. No contrastive framing
 
@@ -70,6 +76,15 @@ None of the patterns below are forbidden. They're legitimate craft when used del
 **Density guideline:** In a single paragraph, one literary device is fine. Two should each be doing clear work. Three is almost certainly too many. This scales naturally with length: a ten-page report has more room than a three-paragraph email, but the per-paragraph density stays the same.
 
 These are warnings. The fix is almost always to remove or simplify, not to replace with a different device.
+
+**Keep the judgement; drop the attitude, not the position.** Flattening a heated sentence must not cost the claim it was carrying. The cheapest way to clear a flag is to delete the sentence, and that is the wrong fix: it removes a position the writer held. Restate the judgement as a claim with a reason instead.
+
+| Before | After |
+|--------|-------|
+| Which is a debugging surface we don't need. | Would add a debugging surface with no offsetting benefit. |
+| Weighting by raw spend here is exactly backwards. | Weighting by raw spend is counterproductive here; it lets a handful of large accounts set the profile. |
+
+After acting on any flag from this rule, reread the passage and confirm every position in the original is still stated. If a claim is gone, it was deleted rather than flattened. Put it back.
 
 **Automated review:** A PostToolUse hook detects deliverable files and triggers a separate sonnet-model agent to review intensity. The reviewing agent comes in cold with no attachment to the draft. Its findings are non-blocking warnings. See the "Intensity review agent" section below.
 
@@ -187,6 +202,8 @@ These are sentence-level constructions that read as machine-written. They are di
 ### 8. Fixing flagged prose: rewrite, do not patch
 
 When you act on any flag from this skill, rewrite the sentence or paragraph from its intended meaning rather than patch-editing in place. Start from what the sentence should say and write it fresh. Editing around a problem tends to extend the sentence and produce clause barf, which is how the structure got bad in the first place.
+
+**Check the length afterward.** A style pass preserves content; it does not shorten a document. Compare the line or word count against the original, and on a document-scale rewrite, diff the two. A content-preserving rewrite lands close to its original length. A large drop means content was lost rather than compressed, and every removed line needs to be accounted for. This is the cheapest available check on the most common damage a style pass does.
 
 ## Shared prose rules
 

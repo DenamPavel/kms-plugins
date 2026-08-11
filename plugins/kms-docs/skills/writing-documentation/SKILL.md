@@ -129,7 +129,7 @@ After drafting, send the page to **independent reviewers**:
 
 Then revise. Two rules for revising:
 
-1. **A reviewer finding is input, not a verdict.** Reject a finding that is wrong. The self-contained-vs-link distinction above is a worked example of a finding worth rejecting (a brief-description-plus-link is fine, not a violation).
+1. **A reviewer finding is input, not a verdict.** Reject a finding that is wrong. The self-contained-vs-link distinction above is a worked example of a finding worth rejecting (a brief-description-plus-link is fine, not a violation). This holds for judgment calls: voice, structure, coverage. A fact-checker `Wrong` or `Unverifiable` verdict is checkable against source, so rejecting one takes a source citation, not just a reason; otherwise apply it.
 2. **Rewrite from intent, do not patch-edit.** Editing in place extends a sentence (you append a qualifier, splice a clause), which is what produces clause barf in the first place. Start from what the sentence should say and write it fresh.
 
 To run the gate with subagents, dispatch the page to two or more reviewer agents with an explicit instruction to flag every tell from the checklist and to quote the offending sentence. Make at least one a different model than you used to draft.

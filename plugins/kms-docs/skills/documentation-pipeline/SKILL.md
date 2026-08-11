@@ -150,7 +150,7 @@ If the revise pass plausibly introduced new issues, re-run Stage 3 on the revise
 
 ### GATE 2 — Human review of the result
 
-Present the finished page (a diff if it replaces a live page), the page-to-source map (in user-guide mode this maps page sections to source files; in maintainer mode it maps machinery claims to source), the accepted and rejected findings, and a plain statement that this is machine-written and needs human review before it ships. Do not write over a live page without this gate.
+Present the finished page (a diff if it replaces a live page), the page-to-source map (in user-guide mode this maps page sections to source files; in maintainer mode it maps machinery claims to source), the accepted and rejected findings, and a plain statement that this is machine-written and needs human review before it ships. Call out separately any fact-checker `Wrong` or `Unverifiable` verdict the reviser rejected, shown with the source evidence the reviser cited, so the human adjudicates a factual dispute rather than rubber-stamping a one-line reason. Do not write over a live page without this gate.
 
 ### In `agents-md` mode
 
@@ -177,6 +177,6 @@ The file is **written and committed only after this gate passes**. No further re
 
 ## Notes
 
-- A reviewer finding is input, not a verdict. The reviser may reject a finding that is wrong.
+- A reviewer finding is input, not a verdict. The reviser may reject a finding that is wrong. An editorial or coverage rejection needs only a reason; rejecting a fact-checker `Wrong`/`Unverifiable` verdict takes a source citation, the same evidence bar as accepting one.
 - Keep project specifics (the controlled vocabulary, the page structure, the home of the page-to-source map) in the docs repo, not in this skill.
 - The pipeline scales down: for a tiny change, run ground → draft → fact-check → revise and skip the coverage critic. Skip the Capture stage for a prose-only page or any revision that does not touch a screen. State when you skip a stage and why.
