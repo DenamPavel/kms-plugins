@@ -1,7 +1,7 @@
 {
     "name": "kms-human-voice",
-    "version": "1.4.0",
-    "description": "Self-contained writing style enforcement: anti-AI phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, intensity modulation, structural prose tells, and direct communication",
+    "version": "1.5.0",
+    "description": "Writing style enforcement for prose a person reads: anti-AI phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, intensity modulation, structural prose tells, and an allowlist-gated intensity review",
     "author": {
         "name": "KMS"
     },

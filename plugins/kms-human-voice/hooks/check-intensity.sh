@@ -1,39 +1,86 @@
 #!/bin/bash
+# Intensity review gate.
+#
+# Polarity: silence by default. A file has to look outward-facing to earn an
+# agent dispatch. The earlier version excluded a blocklist and fired on
+# everything else, which meant every findings.md, implementation plan, and
+# test-requirements file triggered a review. Measured against one working
+# corpus of 1,416 markdown files, the old gate fired on 984; about 16 of those
+# were written for a human reader. Content shape does not separate the two
+# classes either (client memos run 0.22-0.79 prose fraction while CLAUDE.md
+# runs 0.93), so the gate keys on naming and location instead, with an explicit
+# opt-in for anything it misses.
+
 FILE=$(jq -r '.tool_response.filePath // .tool_input.file_path' 2>/dev/null)
 
 if [[ -z "$FILE" ]] || [[ ! -f "$FILE" ]]; then
   exit 0
 fi
 
+PATH_LOWER=$(echo "$FILE" | tr '[:upper:]' '[:lower:]')
+BASENAME_LOWER=$(basename "$PATH_LOWER")
+
+# Machine-facing locations, checked for every file type. These veto even an
+# outward-looking filename: an example memo shipped inside a skill directory is
+# documentation of a memo, not a memo.
+case "$PATH_LOWER" in
+  */.claude/*|*/skills/*|*/plugins/*|*/agents/*|*/commands/*) exit 0 ;;
+  */docs/design-plans/*|*/docs/implementation-plans/*) exit 0 ;;
+  */node_modules/*|*/scratchpad/*|*/backups/*|*/.git/*|/tmp/*|/private/tmp/*) exit 0 ;;
+  */tests/*|*/test/*|*/testkit/*|*/fixtures/*|*/examples/*) exit 0 ;;
+  */council/*|*/research/*|*/control-corpus/*) exit 0 ;;
+esac
+
 IS_DELIVERABLE=false
 
-# Lowercase the basename for case-insensitive exclusion checks
-BASENAME=$(basename "$FILE")
-BASENAME_LOWER=$(echo "$BASENAME" | tr '[:upper:]' '[:lower:]')
-
-case "$FILE" in
+case "$PATH_LOWER" in
   *.md|*.txt)
-    # Exclude internal/Claude files
-    case "$FILE" in
-      */.claude/*) exit 0 ;;
-      */docs/design-plans/*) exit 0 ;;
-    esac
-    # Case-insensitive exclusion of known non-deliverable filenames
+    # An explicit opt-out ends it before anything else is considered.
+    if head -10 "$FILE" | grep -qiE '^voice:[[:space:]]*(skip|none|off)'; then
+      exit 0
+    fi
+
+    # Pipeline artifacts and working docs that carry an outward-facing word in
+    # the name. A file called STATUS-2026-07-15-segmentation-memo.md is a status
+    # doc, so these are checked before the positive markers below.
     case "$BASENAME_LOWER" in
-      claude.md|agents.md|memory.md|skill.md|readme.md) exit 0 ;;
-      # Internal / agent-facing docs: pickup, status, handoff, progress
+      claude.md|agents.md|memory.md|skill.md|readme.md|changelog.md|project.md|todo.md) exit 0 ;;
       *pickup*|*status*|*handoff*|*progress*) exit 0 ;;
+      findings.md|brief.md|test-requirements.md|phase_[0-9]*) exit 0 ;;
+      *red-team*|*audit*|*-grade.md|*-factcheck*) exit 0 ;;
+      *run-log*|*resume*|*ledger*) exit 0 ;;
     esac
-    IS_DELIVERABLE=true
+
+    # Outward-facing markers: written for someone who is not an agent. Matched on
+    # word boundaries, so "memory-called-empire.md" is not a memo.
+    if echo "$BASENAME_LOWER" | grep -qE '(^|[^a-z])(memo|client|pre-?read|email|letter|proposal|deliverable|essay|one-?pager|white-?paper)([^a-z]|$)'; then
+      IS_DELIVERABLE=true
+    fi
+    case "$PATH_LOWER" in
+      */deliverables/*|*/essays/*|*/client-*/*|*/clients/*) IS_DELIVERABLE=true ;;
+    esac
+    # Note: */drafts/* is deliberately NOT a positive marker. A generate-and-select
+    # loop writes dozens of drafts and carries its own review battery; reviewing
+    # each one is duplicate work. Opt a finished draft in with frontmatter or a
+    # .human-voice-review marker file in its directory.
+
+    # Opt-in for anything the markers miss: a frontmatter key, or a marker file
+    # in the directory that covers every prose file beside it.
+    if head -10 "$FILE" | grep -qiE '^(audience|voice):[[:space:]]*(human|client|reader|review)'; then
+      IS_DELIVERABLE=true
+    fi
+    if [[ -f "$(dirname "$FILE")/.human-voice-review" ]]; then
+      IS_DELIVERABLE=true
+    fi
     ;;
   *.py)
-    # Python files that generate PowerPoint or Word documents
+    # Deck and document generators: the text is destined for a human reader by
+    # construction, so the import is signal enough.
     if grep -qE '^(from |import )(pptx|docx)' "$FILE" 2>/dev/null; then
       IS_DELIVERABLE=true
     fi
     ;;
-  *.R|*.r|*.Rmd|*.rmd)
-    # R files that generate documents via officer or rmarkdown
+  *.r|*.rmd)
     if grep -qE '(library\(officer\)|library\(rmarkdown\)|require\(officer\)|require\(rmarkdown\))' "$FILE" 2>/dev/null; then
       IS_DELIVERABLE=true
     fi

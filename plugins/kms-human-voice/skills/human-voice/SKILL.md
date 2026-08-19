@@ -1,14 +1,16 @@
 ---
 name: human-voice
-description: "Use when writing any prose, documentation, client-facing text, or commit messages - a self-contained set of anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, terminology preferences, intensity modulation, structural prose tells, and direct communication style"
+description: "Use before writing prose a person will read on its own: a client memo, an essay, an email, slide or deck text, an article, a published document. Not for machine-facing files (implementation plans, findings, briefs, status and pickup docs, CLAUDE.md and skill files), code, or terminal replies. Anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, intensity modulation, structural prose tells."
 user-invocable: false
 ---
 
 # Human Voice
 
-A self-contained writing-voice skill: personal anti-AI prose rules from client feedback, plus intensity modulation and structural prose tells. Everything it needs is in this file, with no dependency on any other skill.
+A self-contained writing-voice skill: personal anti-AI prose rules from client feedback, plus intensity modulation and structural prose tells. Everything the rules need is in this file; the reference under `references/` covers the intensity catalog and hook mechanics, and is only needed when a review is actually running.
 
 **This is the default voice.** It is the fallback for prose of every kind, including fiction, essays, memos, and chat, whenever no other register has been chosen. Individual rules narrow their own scope where they say so; Rule 6 is the one that does.
+
+**When to load it is a narrower question than what it governs.** Load this file before writing prose that leaves the machine and reaches a person on its own. Machine-facing writing is exempt from the loading step, not from the rules: an implementation plan, a findings file, a status doc, a CLAUDE.md, a commit message, and a terminal reply are all still written in this voice, but none of them is worth loading a rulebook for.
 
 **One thing overrides it, and only for what it covers.** The `kms-docs` scope rulebooks govern product documentation and maintainer docs; `writing-documentation` in particular requires "you" to mean the reader and requires bold literal UI labels. Everywhere else, this skill governs alone.
 
@@ -55,27 +57,24 @@ Skip flattery, compliments, and enthusiasm markers. No "Great question!", "Excel
 
 Get to the point. If the answer is three words, the response is three words.
 
+
 ### 6. Intensity review (warning, not ban)
 
-None of the patterns below are forbidden. They're legitimate craft when used deliberately. The problem is accumulation: when they stack up, the writing sounds like it's performing "writing" rather than communicating.
+None of these patterns is forbidden. They are legitimate craft used deliberately. The problem is accumulation: stacked up, the writing sounds like it is performing "writing" rather than communicating.
 
-**Applies to:** deliverable prose (client-facing `.md`/`.txt`, text destined for PowerPoint slides or Word documents). Internal docs, skill files, and design plans are excluded.
+**Applies to:** prose a person reads (client memos, essays, emails, text destined for slides or documents). Plans, findings, briefs, status docs, and skill files are excluded.
 
-**Patterns to watch for:**
+Five patterns, in descending order of how often they show up:
 
-**Sensory-abstract pairings.** Fusing a physical sensation with an abstract concept: "bruised silence," "the taste of almost-Friday," "timestamp like a scar." One per passage can work. When you spot one, ask what it accomplishes that a plain statement wouldn't. If the answer is just "it sounds literary," flatten it.
+- **Sensory-abstract pairings.** A physical sensation fused with an abstract concept: "bruised silence," "timestamp like a scar." One per passage can work. Ask what it accomplishes that a plain statement would not; if the answer is "it sounds literary," flatten it.
+- **Atmospheric vagueness.** Words picked for mood over precision: ghosts, echoes, whispers, shadows, hums, flickering. "The room hummed with tension" is atmosphere. "Nobody spoke" is information. Default to information.
+- **Compulsive personification.** Agency given to objects or abstractions as a reflex. Reserve it for where attributed intent matters to the point.
+- **Structural repetition.** Consecutive sentences on the same syntactic template, whatever the device. Three or more in a row is always wrong; two with leading dependent clauses is often worth breaking up.
+- **Register flatness.** Every sentence at the same intensity, heightened or clinical alike. Plain sentences make a striking one land.
 
-**Atmospheric vagueness.** Words chosen for evocative mood rather than precision. The usual suspects are ghosts, echoes, whispers, shadows, hums, pulses, flickering, but the category is broader: any word picked because it feels atmospheric rather than because it's the right word. "The room hummed with tension" is atmosphere. "Nobody spoke" is information. Default to information.
+**Density guideline:** one literary device per paragraph is fine, two should each be doing clear work, three is too many. Per-paragraph density stays constant regardless of document length.
 
-**Compulsive personification.** Giving agency to objects or abstractions as a reflex. Cursors that convulse, code that smirks, leaves that cling defiantly. Reserve personification for moments where the attribution of intent matters to the point you're making.
-
-**Structural repetition.** Consecutive sentences following the same syntactic template, independent of which device is used. Three sentences in a row opening with a personified abstraction, or three in a row pairing a concrete image with an emotion. The structure itself becomes the tell even when each sentence is individually defensible. This applies to plain prose, not only literary passages: three sentences starting with the same word (including "the"), or a run of clauses built on the same anaphoric rhythm ("you write there, you reference there, you reach back there"), is the same failure. Three or more in a row is always wrong; two with leading dependent clauses is sometimes worth breaking up.
-
-**Register flatness.** Every sentence operating at the same intensity, whether literary-heightened or clinical-detached. Plain sentences create the space that makes a striking image stand out. If every line is reaching for effect, none of them land.
-
-**Density guideline:** In a single paragraph, one literary device is fine. Two should each be doing clear work. Three is almost certainly too many. This scales naturally with length: a ten-page report has more room than a three-paragraph email, but the per-paragraph density stays the same.
-
-These are warnings. The fix is almost always to remove or simplify, not to replace with a different device.
+The fix is almost always to remove or simplify, not to substitute a different device.
 
 **Keep the judgement; drop the attitude, not the position.** Flattening a heated sentence must not cost the claim it was carrying. The cheapest way to clear a flag is to delete the sentence, and that is the wrong fix: it removes a position the writer held. Restate the judgement as a claim with a reason instead.
 
@@ -86,70 +85,7 @@ These are warnings. The fix is almost always to remove or simplify, not to repla
 
 After acting on any flag from this rule, reread the passage and confirm every position in the original is still stated. If a claim is gone, it was deleted rather than flattened. Put it back.
 
-**Automated review:** A PostToolUse hook detects deliverable files and triggers a separate sonnet-model agent to review intensity. The reviewing agent comes in cold with no attachment to the draft. Its findings are non-blocking warnings. See the "Intensity review agent" section below.
-
-## Automated enforcement
-
-This plugin ships PostToolUse hooks that fire on Write/Edit:
-
-### Mechanical pattern check (`check-ai-patterns.sh`)
-
-Scans `.md` and `.txt` files for:
-
-- **Em-dashes**: flags when more than one ` -- ` appears in a file
-- **Contrastive phrasing**: flags "not X, it's Y" patterns
-
-Violations are non-blocking warnings. Fix them during finalization, not mid-draft.
-
-### Intensity review agent (`check-intensity.sh`)
-
-Detects deliverable files and instructs Claude to spawn a **sonnet-model agent** for intensity review. A separate agent does this review because the model that wrote the prose will defend its own choices; an independent reader catches what self-review misses.
-
-**Deliverable detection:**
-- `.md` and `.txt` files that are NOT in `.claude/` directories, NOT named `CLAUDE.md`/`AGENTS.md`/`MEMORY.md`/`SKILL.md`/`README.md` (case-insensitive), and NOT under `docs/design-plans/`
-- `.py` files that import `pptx` or `docx` (deck and document generators)
-- `.R`/`.Rmd` files that load `officer` or `rmarkdown` (R document generators)
-
-**Deduplication:** the hook tracks the last review time per file in `/tmp/claude-intensity-review/`. If a file was reviewed within the last 5 minutes, the hook silently exits. This prevents repeated reviews during iterative editing.
-
-**When the hook fires, it embeds the full agent prompt in `additionalContext`.** Spawn a sonnet agent in the background using the prompt provided by the hook. The prompt structure:
-
-```
-You are reviewing a draft for literary intensity saturation. Read the file
-and flag any of these patterns:
-
-1. SENSORY-ABSTRACT PAIRINGS: physical sensations fused with abstract
-   concepts. Flag each instance. One per passage is acceptable; more
-   than that and they stop doing work.
-
-2. ATMOSPHERIC VAGUENESS: words chosen for mood rather than precision.
-   Words like ghosts, echoes, whispers, shadows, hums, pulses, flickering
-   are common examples, but flag any word that's atmospheric rather than
-   specific.
-
-3. COMPULSIVE PERSONIFICATION: objects or abstractions given human agency
-   as a reflex rather than a deliberate choice.
-
-4. STRUCTURAL REPETITION: consecutive sentences following the same
-   syntactic template (e.g., three personified-abstraction openers in
-   a row).
-
-5. REGISTER FLATNESS: passages where every sentence operates at the
-   same intensity with no plain/functional sentences between devices.
-
-6. DENSITY: flag any paragraph with three or more literary devices.
-
-For .py or .R files generating slides or documents, review only the text
-content (string literals destined for slides/pages), not the code itself.
-
-For each finding, quote the specific passage and suggest a plainer
-alternative. Rate overall intensity: LOW (fine), MODERATE (a few spots
-to check), HIGH (significant rework needed).
-
-These are non-blocking warnings, not demands. Be specific and brief.
-```
-
-The agent's output is advisory. Address findings during finalization, not mid-draft.
+Full pattern catalog, examples, and the automated-review mechanics: `references/intensity-review.md`.
 
 ### 7. Structural prose tells
 
