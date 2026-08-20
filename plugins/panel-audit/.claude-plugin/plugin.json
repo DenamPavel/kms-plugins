@@ -1,16 +1,16 @@
 {
     "name": "panel-audit",
-    "version": "0.1.3",
-    "description": "Enforced summarize-audit loop for multi-model councils and review panels on non-code work. A summarizer collapses raw panel outputs into source-attributed claims; a re-deriving adversarial auditor (a different model) re-checks each against primary sources; they loop until convergence or a 2-round cap, surfacing contested/unverifiable/unresolved/prose items for human adjudication. The summary prose is audited alongside the claims, and rounds after the first audit only what was flagged or rewritten. Ships the working-with-panels skill, the panel-audit-loop workflow, the panel-summarizer and panel-auditor agents, and a write-time audit-summary hook as a backstop.",
+    "version": "0.2.0",
+    "description": "Two-stage fact-checking for multi-model councils on non-code work. run-panel dispatches seats in parallel, enforces a tooling gate (a seat that asserts facts must have research access), and returns seat reports on disk plus a claim ledger the seats produce themselves. The chair writes the deliverable, then verify-claims takes the ledger entries that survived into it and fans out tool-equipped verifiers in parallel, returning per-claim confirmed/wrong/imprecise/unverifiable with sources. An intermediate document is treated as a claim, not a source. Ships the working-with-panels skill, the run-panel and verify-claims workflows, the claim-verifier and panel-auditor agents, and an audit-summary hook backstop.",
     "author": {
         "name": "KMS"
     },
     "keywords": [
         "review",
         "verification",
+        "fact-check",
         "multi-agent",
         "council",
-        "audit",
-        "loops"
+        "audit"
     ]
 }

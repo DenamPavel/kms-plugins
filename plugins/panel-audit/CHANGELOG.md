@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.2.0
+
+The loop verified the wrong property. Every fix through 0.1.3 made a fidelity machine cheaper and better at being a fidelity machine, and fidelity was never the risk.
+
+The premise is stated outright in the code that shipped: `panel-summarizer` was told "Add nothing no seat said," `revisePrompt` labelled the raw seat reports "ground truth for what the seats said," and the auditor's second focus tell was to check any characterization of what a seat "said, found, concluded" against the seat's own text. So the system guaranteed the summary faithfully represented the panel, and had no mechanism that could ask whether the panel was right.
+
+**The traced failure, 2026-08-16.** A four-seat panel on an essay. The counter-case seat, running without research tooling, produced a list of seven practices that had supposedly made the aesthetic case for art status in print and lost. That list was the evidentiary center of its argument and it reached the deliverable intact. Checked afterward: two of seven hold. One had been admitted to documenta in 2007, one was partially admitted via a 2012 museum show, two never petitioned any art institution at all, and one was never a loss in any sense, having run its own internal art-versus-trade distinction since 1896. The loop rated the summary's description of that list clean, correctly: the summary described the seat accurately. Five of that run's seven findings were attribution corrections.
+
+**The aggregate, across eleven logged runs.** 30 findings: 20 `overstated`, 5 `wrong`, 3 `unverifiable`, 2 `understated`. Most of the `overstated` verdicts were provenance bookkeeping ("Seat 4 did not say that," "Seat 3 said most careful, not strongest") inside a claims digest that existed only to be rewritten into a memo. Five of eleven runs never converged.
+
+**Removed:**
+- **`panel-summarizer` agent and `panel-audit-loop` workflow, both deleted.** The summarizer produced a disposable intermediate, and auditing it left the document that shipped unchecked. Section 4b of the old skill existed entirely to stop the chair reintroducing errors when drafting the real deliverable afterward, which is a rule made necessary by the architecture rather than by the problem.
+- The `claims` / stable-ids / `sources` / `contested` machinery, the revision rounds, `roundCap`, scope narrowing, `pinUnflagged`, and the prose-as-claim-0 audit. All of it was scaffolding for auditing the intermediate.
+
+**New:**
+- **`run-panel` workflow.** Dispatches seats in parallel, each writing its full report to disk and returning only a 200-word headline plus its own list of checkable claims. Keeps the orchestrator context small and produces the claim ledger as a by-product: a seat already knows which of its assertions are checkable and which it was unsure about, so asking costs almost nothing and beats re-deriving the list later from the finished draft. Enforces the tooling gate at dispatch and surfaces `highRisk` claims (load-bearing, unchecked, from a seat with no tools), which is the exact shape of the traced failure.
+- **`verify-claims` workflow.** Takes a finished deliverable, extracts its checkable empirical claims (facts, attributions, quantities, mechanism claims), groups them deterministically, and fans out tool-equipped verifiers in parallel. Single pass, no rounds. Takes a `run-panel` ledger directly, which skips extraction entirely; `draftPath` still extracts first, for hand-written documents and the hook backstop. Returns per-claim `confirmed` / `wrong` / `imprecise` / `unverifiable` with sources consulted, partitioned into `mustFix`. `scope` defaults to `load-bearing`, since a fact nobody's conclusion rests on is not worth a lookup, and `searchBudget` tells a verifier to report `unverifiable` rather than guess when it runs out. Load-bearing groups run first, so `maxClusters` truncates the claims whose falsity would not change the conclusion; anything dropped returns in `uncheckedByCap` rather than reading as coverage. A verifier that returns nothing marks its cluster `unverifiable`, never clean.
+- **`claim-verifier` agent** (Sonnet, tool-equipped). Checks one cluster against the world. Carries the rule the old auditor lacked: an intermediate document is a claim, not a source, with attribution claims the sole exception.
+
+**Measured, 2026-08-16.** Two runs of `verify-claims` over the same 2000-word memo, one unconstrained and one with the cost controls on.
+
+| | no controls | controls on |
+|---|---|---|
+| tokens | 595,063 | 202,571 |
+| tool calls | 250 | 41 |
+| duration | 17 min | 4 min |
+| evidence field | 1371 avg / 2641 max chars | 373 avg / 452 max |
+| claims extracted | 56 | 20 |
+| unverifiable | 1 of 26 (4%) | 3 of 12 (25%) |
+
+Three times cheaper, and it cost real coverage. The constrained run missed two of the three genuine errors the unconstrained one found: one claim was never extracted under `extractCap`, and one came back `unverifiable` with the verifier stating that its search budget had run out. It also found one error the unconstrained run never reached, because the two caps truncated different claims. Neither run was complete, and the fixes below come from that comparison rather than from reasoning about it.
+
+**Reuse, which is the real lever.** Budget caps buy cost by not looking, and the constrained run above proves it: three times cheaper, two real errors missed. The larger waste was never a verifier searching too hard, it was the pipeline redoing settled work. In the traced session the same facts (Eldagsen, Mario/MoMA, the Miller doctrine, the Colorado State Fair) were verified four separate times, because the panel's own evidence seat had checked them, cited URLs, and nothing downstream consumed the result. Three paths now run before anything is dispatched:
+
+- **Duplicate claims collapse.** Two seats asserting the same fact is one lookup; every id still receives the verdict, tagged `duplicateOf`.
+- **Prior verdicts are reused.** `priorVerdicts` carries verdicts from an earlier run and an unchanged claim is not re-checked. The workflow returns `verdictCache` to append; workflows have no filesystem access, so the chair does the I/O and the skill carries the snippet.
+- **Seat-verified claims are inherited, not re-run.** A claim a tooled seat checked and cited sources for returns as `inherited`, a distinct verdict meaning nobody here checked it and a named seat with tools said it did. `run-panel` now requires seats to attach `sources` whenever they set `checked: true`, since a verification with no sources cannot be reused. A deterministic `spotCheckRate` sample (0.25) is re-verified anyway, and a failed spot-check condemns the whole inherited batch rather than the sampled claim alone, because a seat that cites one bad source has probably cited others. `trustSeats: false` disables inheritance.
+
+`searchBudget` returns to 5 per claim now that reuse carries the load. An `inherited` claim is excluded from the unverifiable-rate denominator, since it was never independently checked and would otherwise flatter the rate.
+
+**Tests.** `tests/reuse.test.mjs` stubs `agent()` and `parallel()` and runs the whole reuse and failure surface at zero token cost: duplicate collapse, prior-verdict reuse, inheritance and sampling, the untooled-seat exclusion, spot-check failure propagation, and dead-verifier fail-closed. 16 assertions, run with `node tests/reuse.test.mjs`.
+
+**Tuned from the measurement:**
+- **`searchBudget` is per claim (default 3), not per group.** Six lookups shared across a four-claim group is 1.5 per claim, which is what drove the unverifiable rate from 4% to 25%. A four-claim group now gets ~12.
+- **A compound claim is `confirmed` only when every component is.** The constrained run returned `confirmed` on a two-part claim while its own evidence read "did not independently verify" the second part. Both the workflow prompt and the `claim-verifier` mandate now say a partially checked claim is `imprecise` or `unverifiable`, never confirmed, and must name the unchecked part.
+- **The budget is a ceiling, not a target.** The verifier is told that an `unverifiable` verdict moves work to a human with less context, so hoarding lookups is a false economy.
+- **A starved run announces itself.** An unverifiable rate above 15% logs a warning that the budget, rather than the sources, is the likely cause, and `unverifiableRate` is returned. Without it a starved run reads as clean to anyone looking only at the confirmed count.
+- **`extractCap` (default 20) bounds extraction, with ranking instructions.** The first run pulled 56 claims from 2000 words, over half of them incidental. Compressed claims ("all", "none", "only N", "no X has ever") rank first, since they are the most confident and least checked assertions in any document. Supporting details merge into the claim they support.
+
+**Changed:**
+- **`panel-auditor` rewritten.** Same name, same Fable model, opposite mandate: it now fact-audits a finished document against the world rather than re-deriving a summary against the panel that produced it. Still the hook's backstop.
+- **The skill leads with a gate it did not have.** A seat that will make empirical claims must have research tools; a seat without them holds a lens (structure, logic, craft) and marks every empirical assertion unverified. This alone would have prevented the traced failure.
+- **The chair writes the deliverable directly from the seat reports.** No summarizing agent between the panel and the document.
+- **Run-log schema replaced.** `changedTheDeliverable` records how many findings actually altered shipped text, which is the question the old schema could not answer: nine findings that change nothing is a run that cost tokens to reassure you. `seatsWithTools` against `seats` is the leading indicator for the new gate.
+- `audit-summary` hook message repointed at `verify-claims` and the auditor's new mandate.
+
 ## 0.1.3
 
 The round scoping shipped in 0.1.1 does not work. Observed on the 2026-08-04 admin-plan run: rounds 2 and 3 each re-derived all 24 claims instead of the handful flagged, because the summarizer rewrote every claim on revision and `nextScope` treats changed text as in-scope. That run cost 591,885 subagent tokens over 3 rounds to produce 4 catches, and roughly two thirds of the claim-audits were re-derivations of claims already rated clean. It is the same defect 0.1.1 tried to fix with prompt wording; the wording did not hold.

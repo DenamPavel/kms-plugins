@@ -70,11 +70,13 @@ fi
 date +%s > "$STAMP_FILE"
 
 read -r -d '' MSG << 'AGENT_PROMPT'
-[audit-summary] You wrote a summary/findings document by hand.
+[audit-summary] You wrote a summary/findings document and its facts have not been checked.
 
-The enforced path for a council/panel summary is the working-with-panels skill, which pipes the raw council outputs through the panel-audit-loop workflow: a re-deriving auditor loops against the summary until it converges. You skipped it.
+The thorough path is the working-with-panels skill: run the verify-claims workflow on this file, which extracts its checkable claims and fans out tool-equipped verifiers against primary and external sources.
 
-As a backstop, spawn the panel-auditor agent in the background for a single audit pass on this file: Agent(subagent_type: "panel-audit:panel-auditor", model: fable, prompt: "Audit the summary at <the File path below>. Re-derive each load-bearing claim against primary sources in the project per your mandate; re-derive or flag."). Do NOT stop current work; this pass is advisory. One audit pass is not the loop — if this came from a council you ran, re-run it through the working-with-panels skill.
+As a backstop, spawn the panel-auditor agent in the background for a single pass: Agent(subagent_type: "panel-audit:panel-auditor", model: fable, prompt: "Fact-audit the document at <the File path below>. Check whether its load-bearing claims about the world are TRUE, using your research tools, per your mandate. An intermediate document this was built from is a claim, not a source; check or flag."). Do NOT stop current work; this pass is advisory.
+
+One agent making one pass is not the workflow. If this document came from a panel you ran, run verify-claims on it: the error that ships is a seat that was confidently wrong, and a single auditor is unlikely to catch all of it.
 AGENT_PROMPT
 
 # Build the JSON with jq so all escaping (quotes, newlines) is handled correctly.

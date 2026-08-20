@@ -1,27 +1,38 @@
 # panel-audit
 
-An enforced summarize-audit loop for multi-model councils and review panels on **non-code** work (analysis, research, design). For code review, use `/angel`.
+Fact-checking for multi-model councils and review panels on **non-code** work (analysis, research, design). For code review, use `/angel`.
 
 ## The problem it addresses
 
-Running a panel is not where things go wrong. Compressing its output into takeaways is: a summary of a council is itself a claim, and that is where a sample gets generalized to "only N do X" or a reviewer's finding gets mischaracterized. This plugin keeps council composition flexible and puts the compression step under a loop that a re-deriving auditor drives to convergence.
+The error a panel ships is a seat that was confidently wrong about the world. Seats produce fluent, well-argued, internally consistent reports, and a seat with no way to check a date or a holding will assert one anyway, in the same voice it uses for the things it knows.
+
+So this plugin checks the deliverable's claims against the world, at the point where they are about to be relied on.
 
 ## Components
 
-- **`working-with-panels` skill** — the front door. Ground the brief, run the council, pipe raw outputs to the loop, present the audit trail without compressing it, adjudicate what the loop surfaces, and log the run.
-- **`panel-audit-loop` workflow** — the enforced engine. Summarize → audit → revise, looping until convergence or the round cap (3 by default, `args.roundCap`), in isolated agent contexts so the orchestrator's window stays clean. Round 1 audits every claim and the prose; later rounds audit only what was flagged or rewritten, so a 34-claim summary converging in three rounds costs about 40 claim-audits rather than 102. Returns the summary plus a full audit trail; `contested`, `unverifiable`, `unresolvedAtCap`, and `proseFindings` items surface for human adjudication.
-- **`panel-summarizer` agent** (Opus) — collapses raw panel outputs into source-attributed claims, adds nothing, preserves disagreement; on revision rounds fixes or contests-with-reason.
-- **`panel-auditor` agent** (Fable, a different model so blind spots are not correlated) — re-derives each claim against primary sources instead of proofreading; flags subset-generalizations, mischaracterized reviews, and mechanism/quantitative errors under re-derive-or-flag.
-- **`audit-summary` hook** — a `PostToolUse` backstop. If a summary/findings doc is written to a project file by hand, it dispatches the auditor for a single advisory pass and points back at the enforced loop. One pass is not the loop.
+- **`working-with-panels` skill** — the front door. Give fact-asserting seats real research tools, ground the brief, run the council, write the deliverable yourself, verify its claims, act on the verdicts without compressing them, log the run.
+- **`verify-claims` workflow** — the engine. Extracts the checkable empirical claims from a finished deliverable, groups them by topic, and fans out tool-equipped verifiers in parallel, one per cluster. No rounds. Returns per-claim `confirmed` / `wrong` / `imprecise` / `unverifiable` with the sources actually consulted, partitioned into `mustFix`.
+- **`claim-verifier` agent** (Sonnet, tool-equipped) — checks one cluster of claims against primary and external sources. Reports `unverifiable` rather than rubber-stamping a thin search.
+- **`panel-auditor` agent** (Fable, a different model so blind spots are not correlated) — single-pass fact-auditor for a whole document. Used by the hook.
+- **`audit-summary` hook** — a `PostToolUse` backstop. If a summary or findings doc is written to a project file unverified, it dispatches the auditor for one advisory pass and points at the workflow.
 
 ## Design notes
 
-- **Decorrelated critic.** Summarizer and auditor run on different models on purpose.
-- **Grounded critic.** The auditor re-derives against data/source memos/code; a proofreading critic would rubber-stamp fluent-but-wrong claims.
-- **Escape hatch.** The summarizer can contest a finding with a source-grounded reason; genuine standoffs go to the human rather than forcing a wrong edit or thrashing.
-- **Deliberate termination.** Converge or hit the round cap, then escalate; contested counts as resolved to prevent thrash. A cap of 1 audits without revising and is not a cheaper mode, it is a worse one.
-- **DB limitation.** Database-backed claims the auditor cannot reach return as `unverifiable` and land on the human; they are never fake-passed.
+- **An intermediate document is a claim, not a source.** When a memo says a court held X, the check is the holding, not the seat report that mentioned it. The sole exception is a claim explicitly about attribution.
+- **Verify the thing that ships.** Claims are extracted from the deliverable, so nothing is spent perfecting an intermediate that gets thrown away, and nothing that ships goes unchecked.
+- **Only what survived into the draft.** Facts a seat raised and the chair did not use are not worth checking.
+- **Caps are reported, never silent.** Load-bearing claims are checked first; anything dropped comes back in `uncheckedByCap`. A truncation that reads as full coverage is worse than no check.
+- **Dead agents fail closed.** A verifier that returns nothing marks its claims `unverifiable`, never clean, because an empty result set otherwise computes to a clean pass.
+- **Unverifiable is an honest outcome.** It gets labeled in the document. A rubber-stamped claim becomes a false statement someone acts on.
+
+## What changed in 0.2.0, and why
+
+0.1.x ran a summarize-audit loop: an Opus summarizer collapsed the panel into attributed claims, a Fable auditor re-derived them, and the two looped to convergence. Its ground truth was *what the seats said*, stated outright in the summarizer's prompt ("Add nothing no seat said") and in the workflow's revise prompt ("RAW COUNCIL OUTPUTS (ground truth for what the seats said)").
+
+That made it a fidelity machine. It reliably caught the chair over-crediting a seat, and it had no mechanism that could ask whether a seat was right. Across eleven logged runs it returned 30 findings: 20 `overstated`, 5 `wrong`, 3 `unverifiable`, 2 `understated`, with the majority being attribution corrections inside a digest that existed only to be rewritten into a memo. On 2026-08-16 it passed clean a seat's list of seven historical cases of which five were false, because the summary described the list accurately, which it did.
+
+0.2.0 deletes the summarizer, the rounds, the claims/ids/contested machinery, and the loop workflow. The chair writes the deliverable; the workflow checks whether it is true.
 
 ## Status
 
-Built and self-verified (loop control flow dry-run across converge/cap/contest; hook emits valid JSON on fire). **Not yet run on a real council.** Its value is unproven until it flags a real overstatement in a real summary; the skill's run log exists to accumulate that evidence.
+Rebuilt 0.2.0 from eleven logged 0.1.x runs and one traced failure. The run log at `~/.panel-audit/runs/log.jsonl` carries a `changedTheDeliverable` field so the next revision can be driven by whether findings actually altered shipped text rather than by how many findings were produced.
