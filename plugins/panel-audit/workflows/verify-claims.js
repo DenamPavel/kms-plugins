@@ -1,6 +1,6 @@
 export const meta = {
   name: 'verify-claims',
-  description: 'Fact-check claims against primary and external sources. Takes a claim ledger straight from run-panel (no extraction pass needed) or, for a hand-written document, extracts the claims first. Groups claims and fans out tool-equipped verifiers in parallel. Returns per-claim confirmed / wrong / imprecise / unverifiable with sources, partitioned into what must be fixed before the deliverable ships. Single pass, no rounds.',
+  description: 'Fact-check claims against primary and external sources. Takes a claim ledger straight from run-panel (no extraction pass needed) or, for a hand-written document, extracts the claims first. Groups claims and fans out tool-equipped verifiers in parallel. Returns per-claim confirmed / wrong / imprecise / unverifiable / inherited with sources, partitioned into what must be fixed before the deliverable ships. An inherited verdict means nobody here checked the claim and a tooled seat said it did. Single pass, no rounds.',
   phases: [
     { title: 'Extract', detail: 'only when given a draft instead of a ledger' },
     { title: 'Verify', detail: 'one tool-equipped researcher per claim group' },
@@ -23,7 +23,7 @@ export const meta = {
 //   claimsPerCluster?: number  default 4
 //   maxClusters?: number     default 8, caps parallel verifiers
 //   searchBudget?: number    default 5, suggested lookups PER CLAIM (a 4-claim group
-//                            therefore gets ~12). Measured 2026-08-16: 6 shared across a group
+//                            therefore gets ~20). Measured 2026-08-16: 6 shared across a group
 //                            drove the unverifiable rate from 4% to 25%.
 //   extractCap?: number      default 20, ceiling on claims pulled from a draft
 //   priorVerdicts?: [{quote, verdict, corrected, sources}]

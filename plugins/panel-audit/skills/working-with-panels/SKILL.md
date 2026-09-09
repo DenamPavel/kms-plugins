@@ -116,6 +116,39 @@ Claims are grouped deterministically rather than by an agent: attribution claims
 
 Cost controls: `scope` defaults to `load-bearing`, so claims whose falsity would not change your conclusion are skipped and returned in `uncheckedByScope`; pass `"all"` to check everything. `maxClusters` (8) and `claimsPerCluster` (4) bound the fan-out, and anything dropped comes back in `uncheckedByCap` rather than reading as clean. `searchBudget` (6 per group) tells verifiers to report `unverifiable` rather than guess when they run out.
 
+## 4b. The ledger is the weakest link, and nothing was reviewing it
+
+Whoever writes the claim ledger is an unreviewed single point of failure. Seat-authored
+ledgers get this partly for free, since each seat wrote its own rows. A ledger you
+compose by hand does not.
+
+Measured 2026-09-09: a hand-built 43-row ledger over one source file went out to three
+tool-equipped verifiers. Roughly ten rows were defective, and every defect was the
+author's: a wrong comparison boundary, a mechanism attributed to the wrong function, a
+hedge where the answer was exact, an absolute that this run's own leftover files had
+made false. The author's error rate was worse than any verifier's.
+
+So require verifiers to report ledger defects as a first-class output, not as a
+courtesy. Ask for a flags section naming rows that are ambiguous between a true and a
+false reading, rows whose stated mechanism is misplaced, rows that contradict each
+other, and rows worded as absolutes that invite a false rebuttal. In that run the
+sharpest verifier's flags section caught more of the author's errors than the author
+had caught in review.
+
+Also plant a small number of rows whose answers you established yourself first: two or
+three false ones and at least one true row nobody claimed. A verifier that confirms a
+planted false row is rubber-stamping, and without plants you cannot tell that from
+diligence. In that run all three verifiers cleared all five controls, which is what
+made the rest of their verdicts worth reading.
+
+**Give each verifier its own working directory, and keep the ledger away from
+everything else.** Point them at a directory containing only the ledger and the
+material under test. Seat reports, prior results, and any attribution or answer key
+live outside that tree. Logged 2026-09-09: an attribution file named `*-SEALED.md` was
+left sitting beside the ledger in the directory handed to the verifiers, and the three
+verifiers shared one working tree, so neither anonymity nor independence could be
+claimed for the run. Naming a file "sealed" seals nothing.
+
 ## 5. Act on the verdicts, do not compress them
 
 Present the findings as they came back. RED FLAG: if you catch yourself about to write "the verifier basically confirmed it" instead of showing the verdicts, stop. That compression is the failure this whole plugin exists to prevent.

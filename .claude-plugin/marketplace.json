@@ -27,8 +27,8 @@
         },
         {
             "name": "panel-audit",
-            "description": "Two-stage fact-checking for multi-model councils on non-code work. run-panel dispatches seats in parallel, enforces a tooling gate (a seat that asserts facts must have research access), and returns seat reports on disk plus a claim ledger the seats produce themselves. The chair writes the deliverable, then verify-claims takes the ledger entries that survived into it and fans out tool-equipped verifiers in parallel, returning per-claim confirmed/wrong/imprecise/unverifiable with sources. An intermediate document is treated as a claim, not a source. Ships the working-with-panels skill, the run-panel and verify-claims workflows, the claim-verifier and panel-auditor agents, and an audit-summary hook backstop.",
-            "version": "0.2.0",
+            "description": "Two-stage fact-checking for multi-model councils on non-code work. run-panel dispatches seats in parallel, enforces a tooling gate (a seat that asserts facts must have research access), and returns seat reports on disk plus a claim ledger the seats produce themselves. The chair writes the deliverable, then verify-claims takes the ledger entries that survived into it and fans out tool-equipped verifiers in parallel, returning per-claim confirmed/wrong/imprecise/unverifiable/inherited with sources. An intermediate document is treated as a claim, not a source. Ships the working-with-panels skill, the run-panel and verify-claims workflows, the claim-verifier and panel-auditor agents, and an audit-summary hook backstop.",
+            "version": "0.2.1",
             "source": "./plugins/panel-audit"
         }
     ]

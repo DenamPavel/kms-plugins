@@ -1,5 +1,21 @@
 # Changelog
 
+## [panel-audit] 0.2.1
+
+Adds section 4b to `working-with-panels`: the claim ledger itself needs review, and
+verifier runs need controls and isolation. All three items come from a measured run on
+2026-09-09 in which a hand-built ledger's author produced more defects than any of the
+three verifiers grading against it.
+
+**New:**
+- Require verifiers to report ledger defects as a first-class flags output: rows
+  ambiguous between a true and false reading, misplaced mechanisms, mutually
+  contradictory rows, and absolutes that invite a false rebuttal.
+- Require planted control rows (a few false, at least one true-but-unclaimed) with
+  answers the orchestrator established first, so rubber-stamping is measurable.
+- Require per-verifier working directories, with seat reports, prior results, and any
+  answer key kept outside the tree handed to verifiers.
+
 ## 0.2.0
 
 The loop verified the wrong property. Every fix through 0.1.3 made a fidelity machine cheaper and better at being a fidelity machine, and fidelity was never the risk.
