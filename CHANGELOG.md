@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0
+
+The marketplace is licensed and its README covers all four plugins.
+
+**New:**
+- A root `LICENSE` (MIT). The README already claimed MIT, but no license file or manifest field backed it. Every `plugin.json` now declares `"license": "MIT"`.
+
+**Changed:**
+- The top-level README documents `kms-mcp-patterns` and `panel-audit`, which it previously omitted, and adds a requirements section.
+- The marketplace description named panel-audit's summarize-audit loop, which 0.2.0 replaced. It now describes the two-stage fact-check.
+- `plugins/kms-docs/README.md` states version 2.2.2, matching the manifest.
+
+Plugin changes since 1.1.0 are recorded per release: `kms-docs` 2.2.2 (contrastive-framing tell), and `panel-audit` 0.2.0 and 0.2.1 in `plugins/panel-audit/CHANGELOG.md`.
+
 ## 1.1.0
 
 Adds two plugins that existed locally but had never been pushed, and fixes a defect that made one of them non-functional.

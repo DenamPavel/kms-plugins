@@ -1,6 +1,6 @@
 # panel-audit
 
-Fact-checking for multi-model councils and review panels on **non-code** work (analysis, research, design). For code review, use `/angel`.
+Fact-checking for multi-model councils and review panels on **non-code** work (analysis, research, design).
 
 ## The problem it addresses
 

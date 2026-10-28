@@ -99,7 +99,7 @@ The sandbox receives the code string, runs it against the bound interface implem
 
 ## Step 5: Code Review (Mandatory)
 
-After implementation, invoke the `requesting-code-review` skill from `ed3d-plan-and-execute` with this domain-specific checklist:
+After implementation, run a code review with this domain-specific checklist. Use whatever review workflow you have; the `requesting-code-review` skill from the separately published `ed3d-plan-and-execute` plugin works if it is installed.
 
 - Every method in the interface has a JSDoc comment
 - All return types and complex parameter types are defined in the same file
@@ -130,7 +130,7 @@ Before marking implementation complete:
 - [ ] Stateless execution between runs
 - [ ] MCP exposes exactly one `execute(code: string)` tool
 - [ ] Interface definition included in tool context
-- [ ] Code review completed via `requesting-code-review`
+- [ ] Code review completed against the Step 5 checklist
 
 ## Common Rationalizations
 

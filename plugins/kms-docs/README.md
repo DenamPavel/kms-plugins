@@ -97,4 +97,4 @@ scripts/standalone-check.sh
 
 ## Status
 
-Version 2.2.1. The plugin is standalone by construction and `scripts/standalone-check.sh` enforces it, so nothing here depends on a sibling `kms-*` plugin being installed.
+Version 2.2.2. The plugin is standalone by construction and `scripts/standalone-check.sh` enforces it, so nothing here depends on a sibling `kms-*` plugin being installed.

@@ -1,13 +1,13 @@
 ---
 name: working-with-panels
-description: Use when running a multi-model council or review panel on non-code work (analysis, research, design) and then writing up its output. Grounds the brief, requires seats that assert facts to have the tools to check them, has the chair write the deliverable directly, and fact-checks the deliverable's claims against the world via the verify-claims workflow. For code review, use /angel instead.
+description: Use when running a multi-model council or review panel on non-code work (analysis, research, design) and then writing up its output. Grounds the brief, requires seats that assert facts to have the tools to check them, has the chair write the deliverable directly, and fact-checks the deliverable's claims against the world via the verify-claims workflow.
 ---
 
 # Working with panels
 
 A panel's output is only as good as its worst-informed seat, and the failure you will actually ship is a seat that was confidently wrong about the world. Everything below is arranged around catching that.
 
-For code review, use `/angel`. This is for councils on analysis, research, and design.
+This is for councils on analysis, research, and design, not code review.
 
 ## 0. The rule that prevents most of the damage
 

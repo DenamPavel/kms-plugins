@@ -1,8 +1,8 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "kms-plugins",
-    "version": "1.1.0",
-    "description": "Claude Code plugins: a documentation pipeline, a prose-voice rulebook, an enforced council summarize-audit loop, and MCP server design patterns",
+    "version": "1.2.0",
+    "description": "Claude Code plugins: a documentation pipeline, a prose-voice rulebook, two-stage fact-checking for multi-model councils, and MCP server design patterns",
     "owner": {
         "name": "KMS"
     },
