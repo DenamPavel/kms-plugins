@@ -10,7 +10,7 @@
         {
             "name": "kms-docs",
             "description": "DocSuite is a documentation pipeline: the writing-documentation rulebook plus a /write-doc command that orchestrates source grounding, drafting, bundled Playwright screenshot capture with a code-enforced data-leak guard, cross-model fact-check/edit/coverage review, and revision with two human gates",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": "./plugins/kms-docs"
         },
         {

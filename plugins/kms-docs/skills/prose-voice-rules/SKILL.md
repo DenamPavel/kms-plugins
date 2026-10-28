@@ -34,6 +34,7 @@ Machine-written prose has recognizable tells. Hunt these in every draft and in r
 | **Informal-verb drift** | "wave through," "point at" where "reference" is the established verb | Use the page's established verb. |
 | **Salesmanship** | "which those tools do not offer," competitive tails | State the capability; let the reader draw the contrast. |
 | **False equation** | "X is Y" equating a thing with the machinery behind it ("That decision is the permission system") | Replace the copula with the real verb: *produces*, *computes*, *controls*. |
+| **Contrastive framing** | "It's not X, it's Y," "This isn't X. It's Y.," "not just X, but also Y," "not X but Y," where X is something the reader never believed | State Y directly. Keep a negation only when it corrects a misconception the reader is likely to hold ("The flag defers sync. It does not disable it."), and state the behavior first. |
 | **Spatial metaphor for a named property** | "the wider choices," "broad," "reach" for things with a specific name | Name the actual property: "the persistent choices." |
 | **Clause barf** | A string of comma-clauses each adding a sliver ("approve a recurring action once, at the scope you choose, and stop being asked") | Commit to one declarative shape; name the deferred detail inline. Rewrite, don't trim. |
 | **Hedge-alternative tail** | "...or [obvious secondary path]" appended to a complete instruction | Cut the tail; keep the primary instruction. |
