@@ -1,0 +1,120 @@
+{"label":"pos","text":"This is not a caching layer; it is a foundation for predictable performance."}
+{"label":"pos","text":"The CLI isn't another tool to learn. It's a simpler way to work."}
+{"label":"pos","text":"Observability is not just collecting logs, but also understanding your system."}
+{"label":"pos","text":"This release is not about adding features, but about removing friction."}
+{"label":"pos","text":"Latency isn't the problem; uncertainty is."}
+{"label":"pos","text":"Less configuration, more confidence."}
+{"label":"pos","text":"We don't need another dashboard. We need answers."}
+{"label":"pos","positional":"unused","text":"The question isn't how many services you can deploy, it's how confidently you can operate them."}
+{"label":"pos","text":"Rather than chasing complexity, this architecture embraces clarity."}
+{"label":"pos","text":"The migration gives your team momentum, not another maintenance burden."}
+{"label":"pos","text":"A schema is not a constraint—it's a shared language."}
+{"label":"pos","text":"This isn't a shortcut: it's a better starting point."}
+{"label":"pos","text":"The SDK does not merely expose endpoints; it unlocks possibilities."}
+{"label":"pos","text":"Not another abstraction, but a clearer path from intent to execution."}
+{"label":"pos","text":"The scheduler isn't about running jobs. It's about making work dependable."}
+{"label":"pos","text":"Security is not a checkbox, it is a habit built into every deployment."}
+{"label":"pos","text":"Think outcomes, not endpoints."}
+{"label":"pos","text":"The new workflow is not just faster; it is smarter."}
+{"label":"pos","text":"Our goal isn't fewer lines of YAML—it's fewer reasons to hesitate."}
+{"label":"pos","text":"This tutorial teaches a way of thinking, not a collection of commands."}
+{"label":"pos","text":"The challenge is not writing another parser. The challenge is building trust in the data."}
+{"label":"pos","text":"We aren't shipping a feature; we're opening a door."}
+{"label":"pos","text":"Documentation should be a conversation, not a catalog."}
+{"label":"pos","text":"The value of typed events isn't syntax: it's confidence."}
+{"label":"pos","text":"Rather than adding another layer, the adapter brings the pieces together."}
+{"label":"pos","text":"This is less about database tuning and more about respecting your users' time."}
+{"label":"pos","text":"The agent doesn't just automate tasks. It transforms how teams collaborate."}
+{"label":"pos","text":"The bottleneck isn't your infrastructure, but your approach to change."}
+{"label":"pos","text":"We do not need more deployment knobs; we need a clearer operational story."}
+{"label":"pos","text":"Not just an API, but a platform for better decisions."}
+{"label":"pos","text":"The design favors understanding—not ceremony."}
+{"label":"pos","text":"The question is not whether you can scale. It is whether you can scale with purpose."}
+{"label":"pos","text":"This update isn't cosmetic; it's a commitment to developer experience."}
+{"label":"pos","text":"A good error message is not merely text, but a bridge to resolution."}
+{"label":"pos","text":"The payoff is focus, not just throughput."}
+{"label":"pos","text":"The plugin is not another dependency: it is an investment in consistency."}
+{"label":"pos","text":"Less orchestration. More progress."}
+{"label":"pos","text":"The pipeline isn't a sequence of steps—it's a system of shared intent."}
+{"label":"pos","text":"We built this for people, not processes."}
+{"label":"pos","text":"Rather than managing machines, start enabling teams."}
+{"label":"pos","text":"Counting requests misses the point; understanding their impact is what matters."}
+{"label":"pos","text":"Forget the mechanics of deployment. Focus on the freedom to ship."}
+{"label":"pos","text":"Treating the registry as a list of packages undersells its role as the team's collective memory."}
+{"label":"pos","text":"The real story here goes beyond serialization to the confidence that comes from a shared contract."}
+{"label":"pos","text":"Calling this a cleanup misses what we gained: a codebase that invites change."}
+{"label":"pos","text":"Put the obsession with tooling aside; make room for better engineering."}
+{"label":"pos","text":"A deployment count tells only the surface story. Team momentum tells the one that matters."}
+{"label":"pos","text":"The syntax is beside the point; the breakthrough is a clearer mental model."}
+{"label":"pos","text":"An inventory of endpoints barely scratches the surface of what this API represents: a new way to collaborate."}
+{"label":"pos","text":"Forget faster builds—the real win is getting your attention back."}
+{"label":"pos","text":"Thinking of retries as plumbing misses their deeper purpose: resilience."}
+{"label":"pos","text":"The conversation needs to move beyond tooling and toward craftsmanship."}
+{"label":"pos","text":"Describing the rewrite as routine maintenance overlooks its true contribution: renewed confidence."}
+{"label":"pos","text":"Set aside the feature checklist. Look at the possibilities this release creates."}
+{"label":"pos","text":"The essence of this protocol lies outside its wire format, in the trust it creates between services."}
+{"label":"pos","text":"A faster test suite is only the headline; the real achievement is a healthier engineering culture."}
+{"label":"pos","text":"Reducing this library to convenience functions misses its promise of a more intentional workflow."}
+{"label":"pos","text":"Move past the mechanics of tracing to what really counts: understanding."}
+{"label":"pos","text":"The significance of the new editor goes beyond keystrokes saved to the freedom it gives developers."}
+{"label":"pos","text":"Measuring the migration in changed files misses the larger gain: a foundation for the future."}
+{"label":"neg","text":"The parser is not thread-safe."}
+{"label":"neg","text":"Do not edit the generated manifest."}
+{"label":"neg","text":"If the file is not found, the command creates it."}
+{"label":"neg","text":"Authentication is not required for the health endpoint."}
+{"label":"neg","text":"The client does not retry requests after a 400 response."}
+{"label":"neg","text":"The optional index is not required, but it helps with large tables."}
+{"label":"neg","text":"This release does not support Python 3.8."}
+{"label":"neg","text":"Do not close the stream until the upload completes."}
+{"label":"neg","text":"An empty array is valid; a null value is not."}
+{"label":"neg","text":"The worker isn't running when the status endpoint reports stopped."}
+{"label":"neg","text":"The response does not include fields that the caller cannot access."}
+{"label":"neg","text":"If a token has not expired, the client reuses it."}
+{"label":"neg","text":"This setting has no effect on existing connections."}
+{"label":"neg","text":"A failed validation does not modify the database."}
+{"label":"neg","text":"We did not observe packet loss during the benchmark."}
+{"label":"neg","text":"The callback is not invoked after cancellation."}
+{"label":"neg","text":"Do not log the contents of the Authorization header."}
+{"label":"neg","text":"You don't have to restart the server after changing the log level."}
+{"label":"neg","text":"The package contains no native extensions."}
+{"label":"neg","text":"If the queue isn't empty, shutdown waits for the remaining jobs."}
+{"label":"neg","text":"The endpoint is not available in the community edition."}
+{"label":"neg","text":"Compression is not enabled by default."}
+{"label":"neg","text":"Do not use this helper inside a signal handler."}
+{"label":"neg","text":"The schema migration cannot be reversed after the old column is dropped."}
+{"label":"neg","text":"The tests don't require network access."}
+{"label":"neg","text":"An unset timeout does not mean that the request has no deadline; the client applies its default of 30 seconds."}
+{"label":"neg","text":"The service will not start unless the certificate file is readable."}
+{"label":"neg","text":"The cache is optional, but disabling it increases database traffic."}
+{"label":"neg","text":"No events are emitted when the transaction rolls back."}
+{"label":"neg","text":"The debug flag does not change the response format."}
+{"label":"neg","text":"If the checksum does not match, discard the downloaded archive."}
+{"label":"neg","text":"The argument must not contain a newline."}
+{"label":"neg","text":"This method isn't available on a closed session."}
+{"label":"neg","text":"The export excludes soft-deleted records."}
+{"label":"neg","text":"A replica that has not caught up may return an older value."}
+{"label":"neg","text":"The installer does not overwrite an existing configuration file."}
+{"label":"neg","text":"Do not deploy version 2.4 with a version 2.3 database schema."}
+{"label":"neg","text":"An explicit port is not necessary when connecting to the default listener."}
+{"label":"neg","text":"We haven't measured performance on ARM processors."}
+{"label":"neg","text":"The request is rejected if its signature cannot be verified."}
+{"label":"neg","text":"The flag defers synchronization. It does not disable it."}
+{"label":"neg","text":"The timeout is measured in milliseconds, not seconds."}
+{"label":"neg","text":"A 202 response means the job was accepted, not that it finished."}
+{"label":"neg","text":"The command updates the local index—not the remote repository."}
+{"label":"neg","text":"This is not encryption: Base64 encoding can be reversed without a key."}
+{"label":"neg","text":"The cache stores parsed syntax trees rather than source text, so a cache hit skips parsing."}
+{"label":"neg","text":"The cleanup task removes not just expired sessions, but also the temporary files attached to them."}
+{"label":"neg","text":"The HTTP request isn't the problem; the TLS handshake fails before any request bytes are sent."}
+{"label":"neg","text":"The issue is not whether the token is present, but whether its audience matches this service."}
+{"label":"neg","text":"For offline installation, we don't need access to the package registry. We need a local archive containing the package and its dependencies."}
+{"label":"neg","text":"This counter records attempts, not successful writes; incrementing it happens before the write begins."}
+{"label":"neg","text":"The lock protects the map, not the objects stored in it."}
+{"label":"neg","text":"The retry option isn't a total request limit. It's the number of additional attempts after the first failure."}
+{"label":"neg","text":"Use a read-only transaction rather than a writable transaction for this query; the replica rejects writes."}
+{"label":"neg","text":"The patch changes not just the client serializer but also the server decoder, since both must recognize the new field tag."}
+{"label":"neg","text":"A symbolic link is not a copy—it refers to another filesystem path."}
+{"label":"neg","text":"The timestamp is UTC, not local time; convert it before displaying it to users."}
+{"label":"neg","text":"Less memory, more CPU: disabling the lookup table reduced peak memory from 80 MB to 24 MB and increased CPU utilization from 20% to 35% in this benchmark."}
+{"label":"neg","text":"This endpoint does not delete the account; it revokes the caller's current session."}
+{"label":"neg","text":"The question is not whether the key exists, but whether its value is null: those cases produce different responses under this API."}

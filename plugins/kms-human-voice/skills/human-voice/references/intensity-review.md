@@ -24,14 +24,16 @@ This plugin ships two PostToolUse hooks on Write/Edit.
 
 Scans `.md` and `.txt` files for:
 
-- **Em-dashes**: flags when more than one appears in a file
-- **Contrastive phrasing**: flags "not X, it's Y" patterns
+- **Em-dashes**: flags when more than one appears in a file (README files are exempt)
+- **Contrastive phrasing**: flags the canonical pivot, a negation followed by a pronoun that asserts the replacement ("X isn't Y, it's Z"), and drops lines that open a conditional or a reason. README files are checked.
+
+The contrastive check is tuned for precision. Against the 180 labeled sentences in `tests/contrastive/`, written by two model families, it catches about a quarter of the contrastive sentences and flags one legitimate one. It misses "Less X, more Y", "rather than X, Y", "never X, Y", inverted "Y, not X", and two-sentence pivots with a repeated noun subject. The skill rule and the intensity review carry the rest. Run `tests/contrastive/run.sh` after changing the pattern.
 
 Cheap, no agent involved. Violations are non-blocking warnings. Fix them during finalization, not mid-draft.
 
 ### Intensity review agent (`check-intensity.sh`)
 
-Detects outward-facing files and instructs Claude to spawn a **sonnet-model agent** for intensity review. A separate agent does it because the model that wrote the prose defends its own choices; an independent reader catches what self-review misses.
+Detects outward-facing files and instructs Claude to spawn a **sonnet-model agent** for intensity review. A separate agent does it because the model that wrote the prose defends its own choices; an independent reader catches what self-review misses. The review prompt also covers contrastive framing, which a reader can judge by meaning where the regex can only match shapes.
 
 **The gate is an allowlist, and silence is the default.** An earlier version excluded a blocklist and fired on everything else, which meant every findings file, implementation plan, and test-requirements doc triggered an agent. Measured on one working corpus of 1,416 markdown files, the blocklist gate fired on 984 while about 16 of those files were written for a human reader, so a blocklist cannot be extended into correctness. Content shape does not separate the classes either: client memos there ran 0.22 to 0.79 prose-to-structure fraction while CLAUDE.md files ran 0.93. The gate keys on naming and location instead.
 

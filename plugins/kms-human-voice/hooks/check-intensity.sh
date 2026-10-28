@@ -115,7 +115,7 @@ ESCAPED_FILE=$(echo "$FILE" | sed 's/"/\\"/g')
 read -r -d '' MSG << 'AGENT_PROMPT'
 [intensity-review] Deliverable file detected. Spawn a sonnet-model agent in the background to review this file for intensity saturation. Do NOT stop current work. The agent should use this prompt:
 
-You are reviewing a draft for literary intensity saturation. Read the file and flag any of these patterns:
+You are reviewing a draft for literary intensity saturation and contrastive framing. Read the file and flag any of these patterns:
 
 1. SENSORY-ABSTRACT PAIRINGS: physical sensations fused with abstract concepts. Flag each instance. One per passage is acceptable; more than that and they stop doing work.
 
@@ -128,6 +128,8 @@ You are reviewing a draft for literary intensity saturation. Read the file and f
 5. REGISTER FLATNESS: passages where every sentence operates at the same intensity with no plain/functional sentences between devices.
 
 6. DENSITY: flag any paragraph with three or more literary devices.
+
+7. CONTRASTIVE FRAMING: a sentence or sentence pair that negates something the reader never believed and then pivots to the real claim ('It's not X, it's Y', 'This isn't X. It's Y.', 'not just X, but also Y', 'Y, not X' as a flourish, 'Less X, more Y'). Flag every instance; there is no acceptable quota. Do not flag a negation that corrects a misconception the reader is likely to hold, a warning, a conditional, or a plain statement of what something does not support.
 
 For .py or .R files generating slides or documents, review only the text content (string literals destined for slides/pages), not the code itself.
 

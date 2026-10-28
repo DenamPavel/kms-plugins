@@ -1,0 +1,60 @@
+{"label": "pos", "text": "Caching here isn't an optimization. It's a correctness requirement."}
+{"label": "pos", "text": "The bottleneck was never the database; it was the serializer."}
+{"label": "pos", "text": "Think of the scheduler less as a queue and more as a contract."}
+{"label": "pos", "text": "Migrations aren't a one-time chore, they're an ongoing discipline."}
+{"label": "pos", "text": "This release is about stability, not features."}
+{"label": "pos", "text": "The real cost isn't compute. It's coordination."}
+{"label": "pos", "text": "Retries won't save you here \u2014 idempotency will."}
+{"label": "pos", "text": "You don't configure the router so much as describe intent to it."}
+{"label": "pos", "text": "Observability is not a dashboard; it is a habit."}
+{"label": "pos", "text": "What matters isn't how fast the build runs but how often it breaks."}
+{"label": "pos", "text": "We stopped thinking of tokens as secrets and started treating them as liabilities."}
+{"label": "pos", "text": "The API doesn't just return data, it returns a story about your system."}
+{"label": "pos", "text": "It is not merely a wrapper around libgit2: it is a rethinking of version control ergonomics."}
+{"label": "pos", "text": "Speed was never the point. Predictability was."}
+{"label": "pos", "text": "Forget throughput for a moment: latency is what users feel."}
+{"label": "pos", "text": "Not a framework. A set of conventions."}
+{"label": "pos", "text": "Your tests aren't failing because of flakiness; they're failing because of shared state."}
+{"label": "pos", "text": "This isn't documentation for its own sake\u2014it's an onboarding path."}
+{"label": "pos", "text": "Rather than another config format, think of this as a vocabulary."}
+{"label": "pos", "text": "The goal here was never perfection, only progress."}
+{"label": "pos", "text": "Errors aren't exceptional in distributed systems. They're the default."}
+{"label": "pos", "text": "Schema validation is no longer optional; it's the foundation of the pipeline."}
+{"label": "pos", "text": "It's less a library than a philosophy."}
+{"label": "pos", "text": "The issue isn't that the cache is stale, it's that nobody owns it."}
+{"label": "pos", "text": "Security isn't a feature you add at the end \u2014 it's a property of every layer."}
+{"label": "pos", "text": "We don't ship code. We ship outcomes."}
+{"label": "pos", "text": "Linting is not about style; it's about catching bugs before review does."}
+{"label": "pos", "text": "Don't think of it as a breaking change. Think of it as a cleanup."}
+{"label": "pos", "text": "Plugins aren't add-ons here, they are the architecture."}
+{"label": "pos", "text": "The model doesn't need more context, it needs better context."}
+{"label": "neg", "text": "The cache is not cleared on restart; delete the cache directory to reset it."}
+{"label": "neg", "text": "This flag does not affect existing sessions."}
+{"label": "neg", "text": "If the token is not set, the client falls back to anonymous access."}
+{"label": "neg", "text": "Do not run migrations against the production database without a backup."}
+{"label": "neg", "text": "Webhooks are not retried after a 4xx response, but 5xx responses are retried up to three times."}
+{"label": "neg", "text": "The importer is not idempotent, so running it twice creates duplicate rows."}
+{"label": "neg", "text": "Windows is not supported in this release."}
+{"label": "neg", "text": "It's not necessary to restart the server after editing routes; the watcher reloads them."}
+{"label": "neg", "text": "The `--force` flag skips confirmation but not validation."}
+{"label": "neg", "text": "Unlike v1, v2 does not sort keys, so output order follows insertion order."}
+{"label": "neg", "text": "The default is not `true`. It is `false` unless `STRICT=1` is set."}
+{"label": "neg", "text": "Not all endpoints support pagination; check the `next` field in the response."}
+{"label": "neg", "text": "The server will not start if port 8080 is already in use."}
+{"label": "neg", "text": "Rate limits apply per API key, not per IP address."}
+{"label": "neg", "text": "This is not a security boundary: any process running as the same user can read the socket."}
+{"label": "neg", "text": "Timestamps are in UTC, not local time."}
+{"label": "neg", "text": "The function returns null, not an empty list, when no rows match."}
+{"label": "neg", "text": "Deleting a project does not delete its backups. Backups expire after 30 days."}
+{"label": "neg", "text": "It isn't safe to share the config file because it contains the signing key."}
+{"label": "neg", "text": "We could not reproduce the crash on macOS, but it occurs reliably on Linux."}
+{"label": "neg", "text": "Editing the generated file is not recommended; changes are overwritten on the next build."}
+{"label": "neg", "text": "The old endpoint is deprecated but not removed, and it will keep working until 3.0."}
+{"label": "neg", "text": "The CLI does not read `.env` files; export variables in your shell instead."}
+{"label": "neg", "text": "This is not the same as `--dry-run`: `--plan` contacts the API, while `--dry-run` does not."}
+{"label": "neg", "text": "Less memory is used when streaming is enabled, at the cost of one extra round trip."}
+{"label": "neg", "text": "Prefer environment variables over config files for secrets, not because files are insecure, but because CI already masks env vars."}
+{"label": "neg", "text": "If you don't need the audit log, set `audit: false` to skip writing it."}
+{"label": "neg", "text": "The test suite isn't run on draft pull requests."}
+{"label": "neg", "text": "Node 18 is the minimum version; Node 16 is not tested."}
+{"label": "neg", "text": "The parser accepts trailing commas, but the formatter does not emit them."}

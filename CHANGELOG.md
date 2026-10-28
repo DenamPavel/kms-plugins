@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+`kms-human-voice` 1.6.0: a precision-tuned contrastive check with labeled fixtures and a test, and contrastive framing added to the intensity review. See `plugins/kms-human-voice/CHANGELOG.md`.
+
 ## 1.2.0
 
 The marketplace is licensed and its README covers all four plugins.

@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.6.0
+
+The contrastive-framing check catches the canonical pivot, and contrastive framing gets a model review.
+
+**Changed:**
+- `check-ai-patterns.sh` replaces its contrastive regex. The old pattern allowed exactly one word between the negation and the comma, so an article broke the match. Against 180 labeled sentences it caught 2 of 90 contrastive sentences and flagged 5 of 90 legitimate ones. The new pattern matches a negation followed, after a comma, semicolon, colon, period, or em-dash, by a pronoun asserting the replacement ("X isn't Y, it's Z"), and a second pattern drops lines that open a conditional or a reason. It catches 24 of 90 and flags 1 of 90. It is tuned for precision because a regex cannot tell a rhetorical negation from a real correction; "Less X, more Y", "rather than X, Y", inverted "Y, not X", and two-sentence pivots still pass.
+- README files now get the contrastive check. They keep the em-dash exemption.
+- The `check-intensity.sh` review prompt gains a seventh item, contrastive framing, so deliverables get a reader that judges by meaning.
+
+**New:**
+- `tests/contrastive/`: 120 labeled sentences written by GPT-6.1 Sol and 60 by Claude Opus 5.5, each without seeing the other's set or the pattern, plus `run.sh`, which reads both patterns out of the hook, fails on a recall or false-positive regression, and runs both hooks end to end. The pattern was tuned after both sets existed, so its scores are in-sample.
+
+**Fixed:**
+- Adding the seventh item first broke `check-intensity.sh`: the review prompt is spliced into the hook's JSON unescaped, so a double quote ended the string. Caught before release; `run.sh` now parses the hook's output.
+
 ## 1.5.0
 
 The intensity review stops firing on machine-facing files.
