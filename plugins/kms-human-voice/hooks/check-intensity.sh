@@ -115,7 +115,7 @@ ESCAPED_FILE=$(echo "$FILE" | sed 's/"/\\"/g')
 read -r -d '' MSG << 'AGENT_PROMPT'
 [intensity-review] Deliverable file detected. Spawn a sonnet-model agent in the background to review this file for intensity saturation. Do NOT stop current work. The agent should use this prompt:
 
-You are reviewing a draft for literary intensity saturation and contrastive framing. Read the file and flag any of these patterns:
+You are reviewing a draft for literary intensity saturation, contrastive framing, and rhetorical tells. Read the file and flag any of these patterns:
 
 1. SENSORY-ABSTRACT PAIRINGS: physical sensations fused with abstract concepts. Flag each instance. One per passage is acceptable; more than that and they stop doing work.
 
@@ -129,7 +129,9 @@ You are reviewing a draft for literary intensity saturation and contrastive fram
 
 6. DENSITY: flag any paragraph with three or more literary devices.
 
-7. CONTRASTIVE FRAMING: a sentence or sentence pair that negates something the reader never believed and then pivots to the real claim ('It's not X, it's Y', 'This isn't X. It's Y.', 'not just X, but also Y', 'Y, not X' as a flourish, 'Less X, more Y'). Flag every instance; there is no acceptable quota. Do not flag a negation that corrects a misconception the reader is likely to hold, a warning, a conditional, or a plain statement of what something does not support.
+7. CONTRASTIVE FRAMING: a sentence or sentence pair that negates something the reader never believed and then pivots to the real claim ('It's not X, it's Y', 'This isn't X. It's Y.', 'The question isn't X. The question is Y.', 'Not because X. Because Y.', the countdown 'Not X. Not Y. Z.', 'not just X, but also Y', 'Y, not X' as a flourish, 'Less X, more Y'). Flag every instance; there is no acceptable quota. Do not flag a negation that corrects a misconception the reader is likely to hold, a warning, a conditional, or a plain statement of what something does not support.
+
+8. RHETORICAL AND ANALYTICAL TELLS: self-answered questions ('The result? A 40% drop.'), stacked dramatic fragments, participle tails that claim significance ('..., highlighting the importance of X'), invented concept labels used as established terms ('the attribution paradox'), vague attribution ('experts agree', 'several studies' for one source), stakes inflated beyond the evidence, false 'from X to Y' ranges, 'Despite these challenges' followed by an upbeat conclusion, 'The first... The second...' listicles written as paragraphs, one point restated several ways, a metaphor reused across sections, and bullets that all open with a bolded label. A single deliberate use can stand; flag repeats. Always flag vague attribution, stakes inflation, and any specific figure or citation that a nearby sentence or the cited data does not support.
 
 For .py or .R files generating slides or documents, review only the text content (string literals destined for slides/pages), not the code itself.
 

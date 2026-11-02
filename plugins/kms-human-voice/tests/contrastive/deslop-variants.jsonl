@@ -1,0 +1,30 @@
+{"label": "pos", "text": "Not because the pipeline is slow. Because the input files arrive late."}
+{"label": "pos", "text": "The renewal dip wasn't caused by pricing, but because the onboarding emails stopped."}
+{"label": "pos", "text": "The question isn't whether to segment. The question is how finely."}
+{"label": "pos", "text": "The answer isn't more data. It's cleaner data."}
+{"label": "pos", "text": "Not a dashboard. Not a report. A decision tool."}
+{"label": "pos", "text": "It wasn't the model. It wasn't the features. It was the label leakage."}
+{"label": "pos", "text": "Not ten accounts. Not fifty. Four hundred and twelve."}
+{"label": "pos", "text": "It feels like a targeting problem. It's actually a timing problem."}
+{"label": "pos", "text": "The audience stops being a list and starts being a relationship."}
+{"label": "pos", "text": "Turnout isn't the problem. Persuasion is."}
+{"label": "pos", "text": "This doesn't mean the survey failed, but rather that it measured the wrong thing."}
+{"label": "pos", "text": "The segment is about loyalty, not about spend."}
+{"label": "pos", "text": "Not recklessly, not completely, but enough to move the number."}
+{"label": "pos", "text": "The bottleneck was never compute. It was review time."}
+{"label": "pos", "text": "Volunteers aren't a cost center; they're the program."}
+{"label": "neg", "text": "The flag defers sync. It does not disable it."}
+{"label": "neg", "text": "Unmatched records are excluded from both the guest and benchmark denominators."}
+{"label": "neg", "text": "If the file is not found, the job exits without writing output."}
+{"label": "neg", "text": "The model does not support weekly refreshes yet; monthly is the fastest cadence."}
+{"label": "neg", "text": "Because the panel changed in 2024, earlier years are not comparable on guest counts."}
+{"label": "neg", "text": "Gender coded U means not modeled, so those rows leave the denominator."}
+{"label": "neg", "text": "The export is not encrypted at rest, so store it on the shared drive only."}
+{"label": "neg", "text": "We did not test the mailer in the western region."}
+{"label": "neg", "text": "The lift held in three of four regions but not in the Southeast."}
+{"label": "neg", "text": "Not every account has a renewal date; about 8% are evergreen contracts."}
+{"label": "neg", "text": "Do not rerun the backfill while the nightly load is in progress."}
+{"label": "neg", "text": "The score is not a probability; treat it as a rank within the file."}
+{"label": "neg", "text": "Turnout rose in the suburbs and fell slightly in rural counties."}
+{"label": "neg", "text": "The vendor file is not deduplicated, so match counts run high."}
+{"label": "neg", "text": "Neither method beat the baseline on the holdout set."}

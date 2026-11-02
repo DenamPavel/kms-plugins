@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.7.0
+
+The rulebook gains rhetorical and analytical tells and closes gaps in the contrastive rule.
+
+**Added:**
+- Rule 15, rhetorical and analytical tells: self-answered questions, dramatic fragments, participle tails ("..., highlighting the importance of X"), invented concept labels, vague attribution, stakes inflation, false "from X to Y" ranges, acknowledge-and-dismiss ("Despite these challenges"), listicles written as paragraphs, one-point dilution and the dead metaphor, and bold-first bullets in reader-facing prose. A single deliberate use can stand; vague attribution and stakes inflation cannot.
+- Rule 2 covers the two-sentence pivot ("The question isn't X. The question is Y."), the causal pivot ("Not because X. Because Y."), and the countdown ("Not X. Not Y. Z."), and states the exemption for a negation that corrects a likely misconception.
+- Rule 7's false-equation entry covers the reverse inflation, "serves as" or "stands as" where "is" is accurate.
+- Rule 14 requires the specific figure to come from the source. Rewriting a vague sentence into one with an invented number or citation is the failure this guards against.
+- The `check-intensity.sh` review prompt gains an eighth item for the Rule 15 tells, and item 7 lists the new contrastive variants.
+- `tests/contrastive/deslop-variants.jsonl`: 15 contrastive variants and 15 legitimate negations, written without seeing the hook's pattern. The regex catches 3 of the 15 variants and flags none of the negations; the review prompt is meant to catch the rest. `run.sh` raises its recall floor to 27 and checks that the review prompt carries the new item.
+
+The patterns were adapted from github.com/stephenturner/skill-deslop (MIT), which draws on tropes.fyi and stop-slop. Its blanket rules were left out: no adverbs, no three-item lists, no passive voice, no em-dashes anywhere, straight quotes only. Each would damage legitimate memo and deck prose, and the em-dash rule conflicts with Rule 1.
+
 ## 1.6.0
 
 The contrastive-framing check catches the canonical pivot, and contrastive framing gets a model review.

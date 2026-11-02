@@ -1,7 +1,7 @@
 {
     "name": "kms-human-voice",
-    "version": "1.6.0",
-    "description": "Writing style enforcement for prose a person reads: anti-AI phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, intensity modulation, structural prose tells, and an allowlist-gated intensity review",
+    "version": "1.7.0",
+    "description": "Writing style enforcement for prose a person reads: anti-AI phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, intensity modulation, structural prose tells, rhetorical and analytical tells, and an allowlist-gated intensity review",
     "license": "MIT",
     "author": {
         "name": "KMS"

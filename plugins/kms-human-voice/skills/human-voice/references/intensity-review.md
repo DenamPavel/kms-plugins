@@ -33,7 +33,7 @@ Cheap, no agent involved. Violations are non-blocking warnings. Fix them during 
 
 ### Intensity review agent (`check-intensity.sh`)
 
-Detects outward-facing files and instructs Claude to spawn a **sonnet-model agent** for intensity review. A separate agent does it because the model that wrote the prose defends its own choices; an independent reader catches what self-review misses. The review prompt also covers contrastive framing, which a reader can judge by meaning where the regex can only match shapes.
+Detects outward-facing files and instructs Claude to spawn a **sonnet-model agent** for intensity review. A separate agent does it because the model that wrote the prose defends its own choices; an independent reader catches what self-review misses. The review prompt also covers contrastive framing, which a reader can judge by meaning where the regex can only match shapes, and the rhetorical and analytical tells in Rule 15.
 
 **The gate is an allowlist, and silence is the default.** An earlier version excluded a blocklist and fired on everything else, which meant every findings file, implementation plan, and test-requirements doc triggered an agent. Measured on one working corpus of 1,416 markdown files, the blocklist gate fired on 984 while about 16 of those files were written for a human reader, so a blocklist cannot be extended into correctness. Content shape does not separate the classes either: client memos there ran 0.22 to 0.79 prose-to-structure fraction while CLAUDE.md files ran 0.93. The gate keys on naming and location instead.
 

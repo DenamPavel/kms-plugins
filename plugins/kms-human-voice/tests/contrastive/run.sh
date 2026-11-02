@@ -5,13 +5,16 @@
 # Fixtures, one JSON object per line, {"label":"pos"|"neg","text":"..."}:
 #   gpt-6.1-sol.jsonl      written by GPT-6.1 Sol, 60 pos / 60 neg
 #   claude-opus-5.5.jsonl  written by Claude Opus 5.5, 30 pos / 30 neg
-# Each model wrote its set without seeing the other's or the hook's pattern.
-# The pattern was tuned after both sets existed, so the scores are in-sample.
+#   deslop-variants.jsonl  written by Claude Opus 5.5, 15 pos / 15 neg: the
+#                          two-sentence, causal, and countdown pivots catalogued
+#                          in github.com/stephenturner/skill-deslop, paraphrased
+# Each set was written without seeing the hook's pattern. The pattern was tuned
+# on the first two sets, so their scores are in-sample; deslop-variants is not.
 #
 # Fails if recall drops below MIN_RECALL or false positives exceed MAX_FP.
 # Raise MIN_RECALL when a change catches more; never raise MAX_FP to pass.
 set -u
-MIN_RECALL=24
+MIN_RECALL=27
 MAX_FP=1
 
 DIR=$(cd "$(dirname "$0")" && pwd)
@@ -63,6 +66,9 @@ printf 'audience: human\n\nHello.\n' > "$TMP/memo-$$.md"
 OUT=$(printf '{"tool_input":{"file_path":"%s"}}' "$TMP/memo-$$.md" | bash "$INTENSITY")
 if ! printf '%s' "$OUT" | jq -e '.hookSpecificOutput.additionalContext | test("CONTRASTIVE FRAMING")' >/dev/null 2>&1; then
   echo "FAIL: check-intensity.sh did not emit valid JSON with the contrastive item"; STATUS=1
+fi
+if ! printf '%s' "$OUT" | jq -e '.hookSpecificOutput.additionalContext | test("RHETORICAL AND ANALYTICAL TELLS")' >/dev/null 2>&1; then
+  echo "FAIL: check-intensity.sh did not emit valid JSON with the rhetorical-tells item"; STATUS=1
 fi
 rm -rf "$TMP"
 

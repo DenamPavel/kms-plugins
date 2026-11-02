@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0
+
+`kms-human-voice` 1.7.0: Rule 15 for rhetorical and analytical tells, contrastive variants in Rule 2 and the review prompt, and a source requirement on Rule 14. See `plugins/kms-human-voice/CHANGELOG.md`.
+
 ## 1.3.0
 
 `kms-human-voice` 1.6.0: a precision-tuned contrastive check with labeled fixtures and a test, and contrastive framing added to the intensity review. See `plugins/kms-human-voice/CHANGELOG.md`.

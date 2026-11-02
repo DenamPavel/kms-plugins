@@ -76,23 +76,24 @@ For the full command reference, the agent roster with models, and the bundled sc
 
 `kms-human-voice` holds the `human-voice` skill, a rulebook for prose that reaches a reader without you there to explain it: a memo, an email, an essay, slide text, a published document. Claude loads the skill when Claude judges that its next piece of writing will reach a person. The skill has no slash command.
 
-The rulebook has fourteen numbered rules, including a few house-style preferences. Among them:
+The rulebook has fifteen numbered rules, including a few house-style preferences. Among them:
 
 - A limit of one em-dash per page. For product and maintainer documentation the `kms-docs` rulebooks take precedence, and they allow none.
-- A ban on contrastive framing of the form "not X, it's Y".
+- A ban on contrastive framing of the form "not X, it's Y", including its two-sentence, causal, and countdown variants.
 - Direct communication, without flattery or enthusiasm markers.
 - An intensity review for literary devices, such as sensory-abstract pairings and atmospheric words, that pile up.
 - A list of structural tells: clause barf, hedge-alternative tails, false equations, reassurance sentences, and structure-preview sentences.
 - A rule to fix flagged prose by rewriting it from its intended meaning.
 - An AI phrase blacklist, and bans on throat-clearing, hedging, and overused formal transition words.
-- A requirement to give the reason before the mechanism, and specific figures in place of vague quantifiers.
+- A requirement to give the reason before the mechanism, and specific figures in place of vague quantifiers, taken from the sources rather than invented.
+- A list of rhetorical and analytical tells: self-answered questions, dramatic fragments, participle tails, invented concept labels, vague attribution, stakes inflation, false ranges, and bold-first bullets in reader-facing prose.
 
 Two `PostToolUse` hooks add mechanical checks after Claude writes or edits a file with its Write or Edit tool. Edits you make in your own editor do not trigger them.
 
 | Hook | What it checks |
 |------|----------------|
 | `check-ai-patterns.sh` | Markdown and text files. It warns when a file has more than one em-dash. It also flags contrastive framing in its canonical form, a negation followed by a pronoun that asserts the replacement ("X isn't Y, it's Z"), and skips lines that open a conditional or a reason. The contrastive check favors precision, so many contrastive sentences pass it; the skill rule and the intensity review cover the rest. |
-| `check-intensity.sh` | Files that look like deliverables: Markdown and text files named or stored like memos, client documents, essays, and similar prose; Python files that import `pptx` or `docx`; and R files that load `officer` or `rmarkdown`. For those files, the hook asks Claude to start a background agent that reviews the prose for stacked literary devices and contrastive framing. |
+| `check-intensity.sh` | Files that look like deliverables: Markdown and text files named or stored like memos, client documents, essays, and similar prose; Python files that import `pptx` or `docx`; and R files that load `officer` or `rmarkdown`. For those files, the hook asks Claude to start a background agent that reviews the prose for stacked literary devices, contrastive framing, and rhetorical tells. |
 
 Neither hook blocks a write. Each adds a note to Claude's context and tells Claude to keep working, and `check-ai-patterns.sh` asks Claude to save its fixes for a cleanup pass before the document is shared. Both hooks skip files written for agents and tooling: `AGENTS`, `CLAUDE`, `SKILL`, and `MEMORY` files, anything under a `.claude/` directory, and pickup, status, handoff, and progress files. README files get only the contrastive check: `check-ai-patterns.sh` skips its em-dash count for them, and `check-intensity.sh` skips them entirely. To opt a Markdown or text file into the intensity review, put `audience: human` in its first ten lines or place a `.human-voice-review` file in its directory; `voice: skip` in the first ten lines opts a file out.
 

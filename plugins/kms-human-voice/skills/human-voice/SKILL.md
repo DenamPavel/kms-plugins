@@ -1,6 +1,6 @@
 ---
 name: human-voice
-description: "Use before writing prose a person will read on its own: a client memo, an essay, an email, slide or deck text, an article, a published document. Not for machine-facing files (implementation plans, findings, briefs, status and pickup docs, CLAUDE.md and skill files), code, or terminal replies. Anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, intensity modulation, structural prose tells."
+description: "Use before writing prose a person will read on its own: a client memo, an essay, an email, slide or deck text, an article, a published document. Not for machine-facing files (implementation plans, findings, briefs, status and pickup docs, CLAUDE.md and skill files), code, or terminal replies. Anti-AI prose rules: phrase blacklist, em-dash limits, contrastive framing bans, hedging and throat-clearing, transition-word overuse, intensity modulation, structural prose tells, rhetorical and analytical tells."
 user-invocable: false
 ---
 
@@ -36,6 +36,16 @@ The pattern `[negation] [thing], [pronoun] [other thing]` reads as formulaic AI 
 | It's not about reach, it's about frequency. | Frequency matters more than reach here. |
 
 Alternatives: "rather than," "more than," "instead of," or restructure the sentence entirely.
+
+The same move shows up across two sentences, with a reason attached, or as a countdown. Treat each variant the same way: state the claim the pivot was building toward.
+
+| Before | After |
+|--------|-------|
+| Not because the model is wrong. Because the data is stale. | The forecast missed because the data was three weeks old. |
+| The question isn't cost. The question is timing. | Timing matters more than cost. |
+| Not a bug. Not a feature. A design flaw. | The behavior comes from a design flaw. |
+
+A negation is fine when it corrects something the reader is likely to believe already: "The flag defers sync. It does not disable it." State the behavior first, then the correction.
 
 ### 3. No internal codes in client-facing text
 
@@ -127,6 +137,12 @@ These are sentence-level constructions that read as machine-written. They are di
 |--------|-------|
 | That decision is the permission system. | The permission system produces that decision. |
 
+The reverse inflation also reads as machine-written: "serves as," "stands as," or "represents" where a plain "is" is accurate. Use "is" when both sides are the same kind of thing, and the verb that names the relationship when they differ.
+
+| Before | After |
+|--------|-------|
+| The dashboard serves as the team's source of truth for renewals. | The team tracks renewals in the dashboard. |
+
 **Salesmanship.** State capabilities plainly. Cut competitive comparison, especially in client-facing text.
 
 | Before | After |
@@ -143,7 +159,7 @@ When you act on any flag from this skill, rewrite the sentence or paragraph from
 
 ## Shared prose rules
 
-Rules 9 through 14 are general-purpose prose rules that apply to all writing, not just voice.
+Rules 9 through 15 are general-purpose prose rules that apply to all writing, not just voice.
 
 ### 9. AI phrase blacklist
 
@@ -209,3 +225,47 @@ Vague quantifiers and abstract substitutes read as filler. Name the concrete fig
 |-------|----------|
 | This approach offers significant benefits. | Latency dropped from 450ms to 120ms. |
 | The wider choices persist. | The persistent choices remain across restarts. |
+
+**Specific means specific to your sources.** Take the replacement figure, name, or example from the data or document in front of you. When the source has no figure, describe the concrete thing in words or say the size is unknown. A number or citation invented to make a sentence concrete is worse than the vague sentence it replaced, because the reader will act on it.
+
+| Vague | Specific, with no figure in the source |
+|-------|----------------------------------------|
+| Engagement improved significantly. | Repeat visits rose in all four regions; the data has no baseline to size the change. |
+
+### 15. Rhetorical and analytical tells
+
+These devices perform an argument instead of making one. A single deliberate use in a long piece can work; the tell is reaching for them by default. The fix in each case is to state the claim the device was gesturing at. Two of them, vague attribution and unsupported stakes, are wrong at any density, because they assert something the writer has not shown.
+
+**Self-answered questions.** A question nobody asked, answered in the next breath. Make the statement. Keep questions the reader is genuinely asking, such as a FAQ heading.
+
+| Before | After |
+|--------|-------|
+| The result? A 40% drop in conversions. | Conversions dropped 40%. |
+
+**Dramatic fragments.** Short fragments stacked for emphasis. Write the full sentence.
+
+| Before | After |
+|--------|-------|
+| Speed. Quality. Cost. Pick two. That's the tradeoff. | You can have two of speed, quality, and cost. |
+
+**Participle tails.** An "-ing" phrase bolted onto a fact to claim significance: "highlighting," "underscoring," "reflecting broader trends," "contributing to." If the claim holds, give it its own sentence with its evidence. If you cannot support it, delete the tail.
+
+| Before | After |
+|--------|-------|
+| Turnout rose in the suburbs, highlighting the importance of field programs. | Turnout rose in the suburbs. |
+
+**Invented concept labels.** A coined compound used as though it were an established term: "the attribution paradox," "segment creep," "the targeting trap." Describe the thing in plain words. If the piece needs a name for it, define the name on first use.
+
+**Vague attribution.** "Experts agree," "industry reports suggest," "several studies show." Name the source or drop the claim. Count sources honestly: one report is one report.
+
+**Stakes inflation.** Scaling a finding up to an era, an industry, or "how we think about everything." Size the claim to what the evidence shows.
+
+**False ranges.** "From X to Y" where X and Y sit on no common scale ("from registration to persuasion to turnout"). If it is a list, write a list. Keep "from X to Y" for real spectrums with a meaningful middle.
+
+**Acknowledge-and-dismiss.** "Despite these challenges, ..." followed by an upbeat conclusion. Either analyze the challenge and what it costs, or leave it out.
+
+**Listicle in prose.** Paragraphs opening "The first limitation... The second limitation..." Make it a real list, or join the points by how they relate to each other.
+
+**One-point dilution and the dead metaphor.** The same thesis restated in several framings, or one metaphor carried through every section. State the point once, support it, move on. Use a metaphor once or twice and then drop it.
+
+**Bold-first bullets in reader-facing prose.** Every bullet opening with a bolded label is a strong tell in a memo, email, or essay. Write those bullets as plain sentences. Reference material, skill files, and docs where readers scan for the label keep the bold; so do the bold literal UI labels that `kms-docs` requires.
